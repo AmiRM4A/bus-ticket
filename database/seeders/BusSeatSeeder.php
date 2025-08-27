@@ -19,7 +19,7 @@ class BusSeatSeeder extends Seeder
             for ($i = 1; $i <= $bus->seats_count; $i++) {
                 BusSeat::factory()->create([
                     'bus_id' => $bus->id,
-                    'name' => "Seat {$i}"
+                    'name' => "Seat {$i}",
                 ]);
             }
         }

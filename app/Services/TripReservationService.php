@@ -5,13 +5,11 @@ namespace App\Services;
 use App\Enums\OrderStatusEnum;
 use App\Enums\PaymentStatusEnum;
 use App\Enums\TripSeatStatusEnum;
-use App\Exceptions\InvalidSeatForReservation;
-use App\Exceptions\SeatAlreadyBookedException;
+use App\Events\TripReserved;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Payment;
 use App\Models\Trip;
-use App\Models\TripSeat;
 use App\Models\User;
 use DB;
 use Illuminate\Support\Collection;
@@ -22,7 +20,7 @@ class TripReservationService
 {
     public static function createReservation(User $user, Trip $trip, array $passengersData): Order
     {
-        $seatIds = array_column($passengersData, 'seat_id');
+        $seatIds = array_column($passengersData, 'trip_seat_id');
 
         try {
             DB::beginTransaction();
@@ -38,8 +36,7 @@ class TripReservationService
 
             DB::commit();
 
-            // Fire events
-//            event(new \App\Events\TripReserved($order, $trip, $passengers));
+            TripReserved::dispatch($order, $trip, $passengers);
 
             return $order;
 
@@ -51,7 +48,7 @@ class TripReservationService
 
     public static function cancelReservation(Order $order): void
     {
-        if (!self::canCancelOrder($order)) {
+        if (! self::canCancelOrder($order)) {
             throw new InvalidOrderStateException('Order cannot be cancelled in current state');
         }
 
@@ -70,7 +67,7 @@ class TripReservationService
             DB::commit();
 
             // Fire events
-//            event(new \App\Events\ReservationCancelled($order));
+            //            event(new \App\Events\ReservationCancelled($order));
 
         } catch (Throwable $e) {
             DB::rollBack();
@@ -91,7 +88,7 @@ class TripReservationService
 
         foreach ($seats as $seat) {
             $passenger = $passengers[$seat->id]; // Get passenger by seat_id
-//            $price = $seat->price ?? $trip->price_per_seat; // Allow per-seat pricing (Not implemented, just to know)
+            //            $price = $seat->price ?? $trip->price_per_seat; // Allow per-seat pricing (Not implemented, just to know)
             $price = $trip->price_per_seat;
 
             $orderItemsData[] = [
@@ -140,7 +137,7 @@ class TripReservationService
     {
         return in_array($order->status, [
             OrderStatusEnum::Pending,
-            OrderStatusEnum::Completed
+            OrderStatusEnum::Completed,
         ], true);
     }
 }

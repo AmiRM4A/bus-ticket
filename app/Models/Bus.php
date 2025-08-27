@@ -4,19 +4,18 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\User;
-use App\Models\Province;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Bus extends Model
 {
     use HasFactory;
+
     protected $fillable = [
         'name',
         'driver_id',
         'from',
-        'to'
+        'to',
     ];
 
     public function driver(): BelongsTo

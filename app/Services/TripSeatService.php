@@ -28,13 +28,16 @@ class TripSeatService
                 ->lockForUpdate()
                 ->first();
 
-            if (!$seat) {
+            if (! $seat) {
                 throw new SeatAlreadyBookedException("Seat $seatId is no longer available");
             }
 
-            $seat->update(['status' => TripSeatStatusEnum::RESERVED]);
             $reservedSeats->push($seat);
         }
+
+        // Mark seats as reserved (hold)
+        TripSeat::whereIn('id', $seatIds)
+            ->update(['status' => TripSeatStatusEnum::RESERVED]);
 
         return $reservedSeats;
     }

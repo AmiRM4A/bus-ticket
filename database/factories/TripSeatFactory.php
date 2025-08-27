@@ -2,11 +2,11 @@
 
 namespace Database\Factories;
 
+use App\Enums\TripSeatStatusEnum;
 use App\Models\BusSeat;
 use App\Models\Trip;
 use App\Models\TripSeat;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use App\Enums\TripSeatStatusEnum;
 
 class TripSeatFactory extends Factory
 {

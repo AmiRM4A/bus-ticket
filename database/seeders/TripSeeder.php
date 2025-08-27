@@ -2,14 +2,14 @@
 
 namespace Database\Seeders;
 
+use App\Enums\TripSeatStatusEnum;
 use App\Models\Bus;
 use App\Models\BusSeat;
 use App\Models\Province;
 use App\Models\Trip;
 use App\Models\TripSeat;
-use App\Enums\TripSeatStatusEnum;
-use Illuminate\Database\Seeder;
 use Faker\Factory as Faker;
+use Illuminate\Database\Seeder;
 
 class TripSeeder extends Seeder
 {

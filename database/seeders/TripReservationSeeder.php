@@ -2,11 +2,11 @@
 
 namespace Database\Seeders;
 
+use App\Enums\TripSeatStatusEnum;
 use App\Models\Passenger;
 use App\Models\Trip;
 use App\Models\TripReservation;
 use App\Models\TripSeat;
-use App\Enums\TripSeatStatusEnum;
 use Illuminate\Database\Seeder;
 
 class TripReservationSeeder extends Seeder

@@ -4,17 +4,16 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\Bus;
-use App\Models\BusReservation;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class BusSeat extends Model
 {
     use HasFactory;
+
     protected $fillable = [
         'name',
-        'bus_id'
+        'bus_id',
     ];
 
     public function bus(): BelongsTo

@@ -14,7 +14,7 @@ class PassengerService
 
         // Check for duplicates in input
         if (count($nationalCodes) !== count(array_unique($nationalCodes))) {
-//            throw new ValidationException('Duplicate passengers found in request');
+            //            throw new ValidationException('Duplicate passengers found in request');
             throw new Exception('Duplicate passengers found in request');
         }
 
@@ -47,7 +47,7 @@ class PassengerService
         }
 
         // Bulk create new passengers if needed
-        if (!empty($passengersToCreate)) {
+        if (! empty($passengersToCreate)) {
             Passenger::insert($passengersToCreate);
             $newPassengers = Passenger::whereIn('national_code', array_column($passengersToCreate, 'national_code'))
                 ->get()

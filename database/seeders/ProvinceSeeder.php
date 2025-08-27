@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
@@ -44,7 +43,7 @@ class ProvinceSeeder extends Seeder
             'Tehran',
             'West Azerbaijan',
             'Yazd',
-            'Zanjan'
+            'Zanjan',
         ];
 
         $provincesToInsert = [];

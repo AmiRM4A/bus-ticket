@@ -14,8 +14,8 @@ use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Log;
-use Throwable;
 use Symfony\Component\HttpFoundation\Response as HttpResponse;
+use Throwable;
 
 class TripController extends ApiController
 {
@@ -23,13 +23,17 @@ class TripController extends ApiController
     {
         $perPage = $request->query('per_page', 20);
         $page = $request->query('page', 1);
-        $trips = Trip::with(['origin:id,name', 'destination:id,name', 'bus:id,model,plate,seats_count'])->paginate($perPage, page: $page);
+        $trips = Trip::with([
+            'origin:id,name',
+            'destination:id,name',
+            'bus:id,model,plate,seats_count'
+        ])->paginate($perPage, page: $page);
+
         return $this->success(TripIndexResource::collection($trips));
     }
 
     public function store(StoreTripReservationRequest $request, int $trip_id): JsonResponse
     {
-        # Order items won't be created & trip_seats won't be updated. the amount of payment is 0 too
         $trip = Trip::findOrFail($trip_id);
         try {
             $user = $request->user() ?? User::first();
@@ -45,12 +49,14 @@ class TripController extends ApiController
             return $this->failure($e->getMessage(), HttpResponse::HTTP_BAD_REQUEST);
         } catch (QueryException $e) {
             // Log the exception for debugging purposes
-            Log::error("Database error during trip reservation: " . $e->getMessage());
+            Log::error('Database error during trip reservation: '.$e->getMessage());
+
             return $this->failure('A database error occurred during reservation. Please try again later.');
         } catch (Throwable $e) {
             dd($e->getMessage(), $e->getFile(), $e->getLine());
             // Catch any other unexpected exceptions
-            Log::error("Unexpected error during trip reservation: " . $e->getMessage());
+            Log::error('Unexpected error during trip reservation: '.$e->getMessage());
+
             return $this->failure('An unexpected error occurred during reservation. Please try again later.');
         }
     }
@@ -58,6 +64,7 @@ class TripController extends ApiController
     public function show(int $trip_id): JsonResponse
     {
         $trip = Trip::with(['origin:id,name', 'destination:id,name', 'bus:id,model,plate,seats_count', 'seats.busSeat:name'])->findOrFail($trip_id);
+
         return $this->success(new TripShowResource($trip));
     }
 
@@ -72,7 +79,8 @@ class TripController extends ApiController
                 'message' => 'Trip reservation cancelled successfully.',
             ]);
         } catch (Throwable $e) {
-            Log::error("Error cancelling trip reservation: " . $e->getMessage());
+            Log::error('Error cancelling trip reservation: '.$e->getMessage());
+
             return $this->failure('An error occurred while cancelling the reservation. Please try again later.', 500);
         }
     }

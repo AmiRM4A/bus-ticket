@@ -15,7 +15,7 @@ class BusAndDriverSeeder extends Seeder
     {
         // Create drivers with associated users
         $drivers = Driver::factory(5)->create();
-        
+
         // Create buses with drivers
         Bus::factory(10)->create(['driver_id' => function () use ($drivers) {
             return $drivers->random()->id;

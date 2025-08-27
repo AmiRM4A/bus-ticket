@@ -18,7 +18,7 @@ class Trip extends Model
         'total_seats',
         'price_per_seat',
         'reserved_seats_count',
-        'completed_at'
+        'completed_at',
     ];
 
     protected $casts = [
