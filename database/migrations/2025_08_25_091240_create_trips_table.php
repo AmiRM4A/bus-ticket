@@ -1,0 +1,38 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\DB;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('trips', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('bus_id')->constrained('buses');
+            $table->foreignId('from_province_id')->index()->constrained('provinces');
+            $table->foreignId('to_province_id')->index()->constrained('provinces');
+            $table->unsignedSmallInteger('total_seats');
+            $table->decimal('price_per_seat', 8, 2);
+            $table->unsignedSmallInteger('reserved_seats_count')->default(0);
+            $table->timestamp('completed_at')->nullable();
+            $table->timestamps();
+        });
+
+        DB::statement('ALTER TABLE trips ADD CONSTRAINT chk_reserved_seats_count CHECK (reserved_seats_count <= total_seats)');
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('trips');
+        DB::statement('ALTER TABLE trips DROP CONSTRAINT IF EXISTS chk_reserved_seats_count');
+    }
+};
