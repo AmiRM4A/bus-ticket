@@ -65,7 +65,7 @@ return [
     |
     */
 
-    'timezone' => 'UTC',
+    'timezone' => 'Asia/Tehran',
 
     /*
     |--------------------------------------------------------------------------
@@ -83,6 +83,18 @@ return [
     'fallback_locale' => env('APP_FALLBACK_LOCALE', 'en'),
 
     'faker_locale' => env('APP_FAKER_LOCALE', 'en_US'),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Seat Reservation Time To Live (TTL)
+    |--------------------------------------------------------------------------
+    |
+    | The number of minutes a seat reservation is held before it expires if
+    | not confirmed (e.g., by completing a payment).
+    |
+    */
+
+    'seat_reservation_ttl_minutes' => env('SEAT_RESERVATION_TTL_MINUTES', 15),
 
     /*
     |--------------------------------------------------------------------------
