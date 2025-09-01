@@ -22,7 +22,9 @@ class AppServiceProvider extends ServiceProvider
 
         $this->app->bind(PassengerService::class);
 
-        $this->app->bind(PaymentService::class);
+        $this->app->bind(PaymentService::class, function ($app) {
+            return new PaymentService($app->make(OrderService::class));
+        });
 
         $this->app->bind(OrderService::class, function ($app) {
             return new OrderService($app->make(TripSeatService::class));

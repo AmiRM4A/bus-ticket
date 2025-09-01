@@ -23,15 +23,21 @@ readonly class TripSeatService
      */
     public function reserveSeats(Trip $trip, Collection $passengers): Collection
     {
+        // Each passenger has it's requested seat id as it's key
+        // We'll get those keys (which are the seat ids requested for reservation)
         $seatIds = $passengers->keys()->toArray();
+
+        // This would be the time that we'll release that seat's temporary reservation after that
         $expiresAt = now()->addMinutes($this->reservationTtlMinutes);
 
+        // Getting bus seats map (key by the seats column & row. e.g => A_1, B_3, C_2 and...)
         $busSeatsMap = $this->getBusSeatsMap($trip->bus_id);
+
+        // Getting the bus occupied seats (those which are reserved or sold)
         $occupiedTripsSeats = $this->getOccupiedTripSeats($trip);
         $seatIdsSet = array_flip($seatIds);
 
         $reservedSeats = collect();
-
         foreach ($seatIds as $seatId) {
             $seat = TripSeat::with('busSeat')
                 ->where('id', $seatId)
@@ -41,10 +47,10 @@ readonly class TripSeatService
                 ->first();
 
             if (! $seat) {
-                throw new InvalidSeatForReservation("Seat $seatId is no longer available");
+                throw new InvalidSeatForReservation(__('api.seat_unavailable', ['seatId' => $seatId]));
             }
 
-            // Validate gender policy
+            // Validate gender policy for this seat
             $this->validateGenderPolicy(
                 $seat,
                 $passengers[$seatId],
@@ -102,6 +108,9 @@ readonly class TripSeatService
             ->keyBy('bus_seat_id');
     }
 
+    /**
+     * @throws InvalidSeatForReservation
+     */
     private function validateGenderPolicy(
         TripSeat $seat,
         Passenger $passenger,
@@ -142,20 +151,26 @@ readonly class TripSeatService
 
             // Both conditions failed - throw exception
             throw new InvalidSeatForReservation(
-                "Seat $busSeat->name cannot be booked due to gender policy conflict with adjacent seat $adjacentBusSeat->name"
+                __('api.seat_gender_conflict', [
+                    'seatName' => $busSeat->name,
+                    'adjacentSeatName' => $adjacentBusSeat->name,
+                ])
             );
         }
     }
 
     private function getAdjacentSeats(int $row, string $column): array
     {
-        $layout = ['A', 'B', 'C', 'D']; // Left to right
-        $index = array_search($column, $layout);
+        $layout = ['A', 'B', 'C', 'D']; // Seat layout left to right
+        $index = array_search($column, $layout); // Find current seat index
         $adjacent = [];
 
+        // Check seat to the left
         if ($index > 0) {
             $adjacent[] = ['row' => $row, 'column' => $layout[$index - 1]];
         }
+
+        // Check seat to the right
         if ($index < count($layout) - 1) {
             $adjacent[] = ['row' => $row, 'column' => $layout[$index + 1]];
         }

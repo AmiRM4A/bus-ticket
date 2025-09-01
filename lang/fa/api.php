@@ -1,0 +1,42 @@
+<?php
+
+return [
+    'success' => 'عملیات با موفقیت انجام شد',
+    'created' => 'منبع با موفقیت ایجاد شد',
+    'accepted' => 'درخواست برای پردازش پذیرفته شد',
+    'no_content' => 'محتوایی در دسترس نیست',
+
+    'bad_request' => 'درخواست نامعتبر - داده‌های ارائه شده اشتباه است',
+    'unauthorized' => 'غیرمجاز - احراز هویت لازم است',
+    'payment_required' => 'پرداخت الزامی است',
+    'forbidden' => 'ممنوع - دسترسی کافی نیست',
+    'not_found' => 'منبع یافت نشد',
+    'method_not_allowed' => 'متد HTTP مجاز نیست',
+    'not_acceptable' => 'درخواست قابل قبول نیست',
+    'conflict' => 'تداخل - منبع از قبل موجود است',
+    'gone' => 'منبع دیگر در دسترس نیست',
+    'unprocessable_entity' => 'اعتبارسنجی ناموفق - داده‌های نامعتبر',
+    'locked' => 'منبع قفل شده است',
+    'too_many_requests' => 'درخواست‌های زیاد - محدودیت نرخ فراتر رفت',
+
+    'server_error' => 'خطای داخلی سرور',
+    'not_implemented' => 'ویژگی پیاده‌سازی نشده است',
+    'bad_gateway' => 'خطای Bad Gateway',
+    'service_unavailable' => 'سرویس به طور موقت در دسترس نیست',
+    'gateway_timeout' => 'مهلت زمانی Gateway به پایان رسید',
+
+    'unknown_error' => 'خطای ناشناخته‌ای رخ داد',
+    'seat_unavailable' => 'صندلی :seatId دیگر در دسترس نیست',
+    'seat_gender_conflict' => 'صندلی :seatName به دلیل تداخل سیاست جنسیتی با صندلی مجاور :adjacentSeatName قابل رزرو نیست',
+    'unexpected_reservation_error' => 'خطای غیرمنتظره در هنگام رزرو سفر',
+    'reservation_failed' => 'خطای غیرمنتظره‌ای در هنگام رزرو رخ داد.',
+    'error_cancelling_reservation' => 'خطا در لغو رزرو سفر',
+    'cancellation_failed' => 'خطایی در هنگام لغو رزرو رخ داد.',
+    'duplicate_passengers' => 'مسافران تکراری در درخواست یافت شد',
+    'order_no_items' => 'سفارش هیچ موردی برای انجام ندارد',
+    'seats_not_belong_to_order' => 'برخی از صندلی‌ها به این سفارش تعلق ندارند',
+    'order_not_valid_to_pay' => 'سفارش برای پرداخت معتبر نیست.',
+    'payment_already_verified' => 'پرداخت قبلاً تأیید شده است.',
+    'payment_not_valid_to_verify' => 'پرداخت برای تأیید معتبر نیست.',
+    'order_cannot_be_cancelled' => 'این سفارش قابل لغو نیست.',
+];

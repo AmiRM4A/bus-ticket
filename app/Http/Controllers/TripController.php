@@ -61,14 +61,14 @@ class TripController extends ApiController
         } catch (InvalidSeatForReservation $e) {
             return $this->failure($e->getMessage(), HttpResponse::HTTP_BAD_REQUEST);
         } catch (Throwable $th) {
-            Log::error('Unexpected error during trip reservation', [
+            Log::error(__('api.unexpected_reservation_error'), [
                 'message' => $th->getMessage(),
                 'file' => $th->getFile(),
                 'line' => $th->getLine(),
                 'trace' => $th->getTraceAsString(),
             ]);
 
-            return $this->failure('An unexpected error occurred during reservation.');
+            return $this->failure(__('api.reservation_failed'));
         }
     }
 
@@ -81,7 +81,7 @@ class TripController extends ApiController
     {
         // Fetching order_id for the auth user (avoid selecting other user's order)
         $order = Order::forUser(auth()->id())
-            ->pending() // Only cancel if the order is pending (not cancelled or completed)
+            ->pending() // Only Pending order (we don't cancel "Cancelled" or "Completed" orders)
             ->findOrFail($order_id);
         $seatsToCancel = $request->validated('seat_ids');
 
@@ -92,13 +92,13 @@ class TripController extends ApiController
         } catch (InvalidOrderException $e) {
             return $this->failure(message: $e->getMessage(), status: HttpResponse::HTTP_NOT_FOUND);
         } catch (Throwable $th) {
-            Log::error('Error cancelling trip reservation', [
+            Log::error(__('api.error_cancelling_reservation'), [
                 'message' => $th->getMessage(),
                 'order_id' => $order->id,
                 'seats_to_cancel' => $seatsToCancel,
             ]);
 
-            return $this->failure('An error occurred while cancelling the reservation.');
+            return $this->failure(__('api.cancellation_failed'));
         }
     }
 

@@ -10,7 +10,6 @@ use App\Models\OrderItem;
 use App\Models\Trip;
 use App\Models\TripReservation;
 use App\Models\User;
-use DB;
 use Illuminate\Support\Collection;
 use Throwable;
 
@@ -24,14 +23,15 @@ readonly class OrderService
 
     public function createOrderWithItems(User $user, Trip $trip, Collection $seats, Collection $passengers): Order
     {
+        // Create order for user
         $order = $user->orders()->create([
             'status' => OrderStatusEnum::Pending,
             'data' => ['trip_id' => $trip->id],
         ]);
 
+        // Create order items (which are the reserved seat id(s) here)
         $orderItemsData = [];
         $now = now();
-
         foreach ($seats as $seat) {
             $passenger = $passengers[$seat->id];
             $price = $trip->price_per_seat;
@@ -62,9 +62,10 @@ readonly class OrderService
         $items = $order->orderItems;
 
         if ($items->isEmpty()) {
-            throw new InvalidOrderException('Order has no items to fulfill');
+            throw new InvalidOrderException(__('api.order_no_items'));
         }
 
+        // Prepare seat's selling data
         $now = now();
         $reservationsToCreate = [];
         /** @var OrderItem $item */
@@ -78,26 +79,17 @@ readonly class OrderService
             ];
         }
 
-        try {
-            DB::beginTransaction();
+        // Mark order as completed
+        $order->markAsCompleted();
 
-            // Mark order as completed
-            $order->markAsCompleted();
+        // Sell the seats (add them to trip_reservations table)
+        TripReservation::insert($reservationsToCreate);
 
-            // Reserve the seats (add them to trip_reservations table)
-            TripReservation::insert($reservationsToCreate);
+        // Mark seats as sold (for the trip)
+        $seatIds = $items->pluck('trip_seat_id')->toArray();
+        $this->tripSeatService->markTripSeatsAsSold($seatIds);
 
-            // Mark those seats as sold
-            $seatIds = $items->pluck('trip_seat_id')->toArray();
-            $this->tripSeatService->markTripSeatsAsSold($seatIds);
-
-            // We can also add the reserved seats count to the trip's reserved seats
-
-            DB::commit();
-        } catch (Throwable $th) {
-            DB::rollBack();
-            throw $th;
-        }
+        // We can also add the reserved seats count to the trip's reserved seats
     }
 
     /**
@@ -117,14 +109,14 @@ readonly class OrderService
     /**
      * @throws InvalidOrderException
      */
-    public function validateOrderSeats(Order $order, array $seatsToCancel): Collection
+    public function validateOrderSeats(Order $order, array $seats_to_cancel): Collection
     {
         $seats = $order->orderItems()
-            ->whereIn('trip_seat_id', $seatsToCancel)
+            ->whereIn('trip_seat_id', $seats_to_cancel)
             ->get();
 
-        if (count($seatsToCancel) !== $seats->count()) {
-            throw new InvalidOrderException('Some seats do not belong to this order');
+        if (count($seats_to_cancel) !== $seats->count()) {
+            throw new InvalidOrderException(__('api.seats_not_belong_to_order'));
         }
 
         return $seats;

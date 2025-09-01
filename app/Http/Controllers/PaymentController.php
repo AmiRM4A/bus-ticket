@@ -2,21 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use App\Enums\PaymentStatusEnum;
 use App\Models\Order;
 use App\Models\Payment;
-use App\Services\OrderService;
 use App\Services\PaymentService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response as HttpResponse;
-use Throwable;
 
 class PaymentController extends ApiController
 {
     public function __construct(
-        private readonly PaymentService $paymentService,
-        private readonly OrderService $orderService
+        private readonly PaymentService $paymentService
     ) {
         //
     }
@@ -28,7 +24,7 @@ class PaymentController extends ApiController
 
         if (! $order->canPay()) { // Check if order is valid to pay (status)
             return $this->failure(
-                message: 'Order is not valid to pay.',
+                message: __('api.order_not_valid_to_pay'),
                 status: HttpResponse::HTTP_UNPROCESSABLE_ENTITY
             );
         }
@@ -44,26 +40,21 @@ class PaymentController extends ApiController
     {
         if ($payment->isAlreadyVerified()) {
             return $this->failure(
-                message: 'Payment is already verified.',
+                message: __('api.payment_already_verified'),
                 status: HttpResponse::HTTP_UNPROCESSABLE_ENTITY
             );
         }
 
         if (! $payment->isPendingToVerify() || ! $this->isValidVerifyRequest($request, $payment)) {
             return $this->failure(
-                message: 'Payment is not valid to verify.',
+                message: __('api.payment_not_valid_to_verify'),
                 status: HttpResponse::HTTP_UNPROCESSABLE_ENTITY
             );
         }
 
-        try {
-            $this->paymentService->verify($payment);
-            $this->orderService->fulfillOrder($payment->order);
+        $this->paymentService->verify($payment);
 
-            return $this->success();
-        } catch (Throwable $th) {
-            return $this->failure($th->getMessage(), HttpResponse::HTTP_INTERNAL_SERVER_ERROR);
-        }
+        return $this->success();
     }
 
     private function isValidVerifyRequest(Request $request, Payment $payment): bool

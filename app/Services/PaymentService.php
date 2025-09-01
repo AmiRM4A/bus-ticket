@@ -5,10 +5,18 @@ namespace App\Services;
 use App\Enums\PaymentStatusEnum;
 use App\Models\Order;
 use App\Models\Payment;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
+use Throwable;
 
-class PaymentService
+readonly class PaymentService
 {
+    public function __construct(
+        private OrderService $orderService
+    ) {
+        //
+    }
+
     public function createPaymentLink(Order $order): string
     {
         $payment = $this->createPaymentForOrder($order);
@@ -19,13 +27,27 @@ class PaymentService
         return route('payment.callback', [$payment->transaction_id]);
     }
 
-    public function verify(Payment $payment): bool
+    public function verify(Payment $payment): void
+    {
+        try {
+            $this->verifyPaymentFromPSP($payment);
+
+            DB::beginTransaction();
+
+            $payment->markAsVerified();
+            $this->orderService->fulfillOrder($payment->order);
+
+            DB::commit();
+        } catch (Throwable $th) {
+            DB::rollBack();
+            throw $th;
+        }
+    }
+
+    private function verifyPaymentFromPSP(): bool
     {
         // Check the payment's verification from PSP
-        // if the verification was valid, mark payment as paid
-        // else, throw an exception
-
-        $payment->markAsVerified();
+        // if verification wasn't true, throw an exception
 
         return true;
     }

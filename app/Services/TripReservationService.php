@@ -27,7 +27,7 @@ readonly class TripReservationService
             // Resolve passengers (create new ones if needed) - keyed by seat_id
             $passengers = $this->passengerService->createOrRetrievePassengers($passengersData);
 
-            // Validate and reserve seats
+            // Validate and reserve seats (mark them as reserved/hold)
             $reservedSeats = $this->tripSeatService->reserveSeats($trip, $passengers);
 
             // Create order with items and payment
