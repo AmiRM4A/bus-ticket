@@ -81,7 +81,7 @@ class TripController extends ApiController
     {
         // Fetching order_id for the auth user (avoid selecting other user's order)
         $order = Order::forUser(auth()->id())
-            ->pending() // Only cancel if the order is pending (not cancelled or completed)
+            ->pending() // Only Pending order (we don't cancel "Cancelled" or "Completed" orders)
             ->findOrFail($order_id);
         $seatsToCancel = $request->validated('seat_ids');
 

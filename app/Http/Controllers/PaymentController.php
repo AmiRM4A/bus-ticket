@@ -2,21 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use App\Enums\PaymentStatusEnum;
 use App\Models\Order;
 use App\Models\Payment;
-use App\Services\OrderService;
 use App\Services\PaymentService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response as HttpResponse;
-use Throwable;
 
 class PaymentController extends ApiController
 {
     public function __construct(
-        private readonly PaymentService $paymentService,
-        private readonly OrderService $orderService
+        private readonly PaymentService $paymentService
     ) {
         //
     }
@@ -56,14 +52,9 @@ class PaymentController extends ApiController
             );
         }
 
-        try {
-            $this->paymentService->verify($payment);
-            $this->orderService->fulfillOrder($payment->order);
+        $this->paymentService->verify($payment);
 
-            return $this->success();
-        } catch (Throwable $th) {
-            return $this->failure($th->getMessage(), HttpResponse::HTTP_INTERNAL_SERVER_ERROR);
-        }
+        return $this->success();
     }
 
     private function isValidVerifyRequest(Request $request, Payment $payment): bool

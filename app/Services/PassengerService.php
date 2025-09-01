@@ -17,6 +17,7 @@ class PassengerService
             throw new ValidationException('Duplicate passengers found in request');
         }
 
+        // Fetch passengers with given national codes (get the existing passengers here)
         $existingPassengers = Passenger::whereIn('national_code', $nationalCodes)
             ->get()
             ->keyBy('national_code');
@@ -29,9 +30,10 @@ class PassengerService
             $nationalCode = $passengerData['national_code'];
             $seatId = $passengerData['trip_seat_id'];
 
+            // Check if passenger already exist
             if ($existingPassengers->has($nationalCode)) {
                 $resolvedPassengers[$seatId] = $existingPassengers[$nationalCode];
-            } else {
+            } else { // If not exist, create it
                 $passengersToCreate[] = [
                     'first_name' => $passengerData['first_name'],
                     'last_name' => $passengerData['last_name'],
@@ -42,6 +44,7 @@ class PassengerService
                     'updated_at' => $now,
                     'gender' => $passengerData['gender'],
                 ];
+
                 // Store trip_seat_id mapping for later
                 $resolvedPassengers[$seatId] = $nationalCode; // Temporary placeholder
             }
