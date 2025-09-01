@@ -62,7 +62,7 @@ readonly class OrderService
         $items = $order->orderItems;
 
         if ($items->isEmpty()) {
-            throw new InvalidOrderException('Order has no items to fulfill');
+            throw new InvalidOrderException(__('api.order_no_items'));
         }
 
         // Prepare seat's selling data
@@ -116,7 +116,7 @@ readonly class OrderService
             ->get();
 
         if (count($seats_to_cancel) !== $seats->count()) {
-            throw new InvalidOrderException('Some seats do not belong to this order');
+            throw new InvalidOrderException(__('api.seats_not_belong_to_order'));
         }
 
         return $seats;

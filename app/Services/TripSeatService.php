@@ -47,7 +47,7 @@ readonly class TripSeatService
                 ->first();
 
             if (! $seat) {
-                throw new InvalidSeatForReservation("Seat $seatId is no longer available");
+                throw new InvalidSeatForReservation(__('api.seat_unavailable', ['seatId' => $seatId]));
             }
 
             // Validate gender policy for this seat
@@ -151,7 +151,10 @@ readonly class TripSeatService
 
             // Both conditions failed - throw exception
             throw new InvalidSeatForReservation(
-                "Seat $busSeat->name cannot be booked due to gender policy conflict with adjacent seat $adjacentBusSeat->name"
+                __('api.seat_gender_conflict', [
+                    'seatName' => $busSeat->name,
+                    'adjacentSeatName' => $adjacentBusSeat->name,
+                ])
             );
         }
     }

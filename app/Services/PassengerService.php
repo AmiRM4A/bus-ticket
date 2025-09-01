@@ -14,7 +14,7 @@ class PassengerService
 
         // Check for duplicates in input
         if (count($nationalCodes) !== count(array_unique($nationalCodes))) {
-            throw new ValidationException('Duplicate passengers found in request');
+            throw new ValidationException(__('api.duplicate_passengers'));
         }
 
         // Fetch passengers with given national codes (get the existing passengers here)

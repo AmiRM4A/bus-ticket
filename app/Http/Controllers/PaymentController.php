@@ -24,7 +24,7 @@ class PaymentController extends ApiController
 
         if (! $order->canPay()) { // Check if order is valid to pay (status)
             return $this->failure(
-                message: 'Order is not valid to pay.',
+                message: __('api.order_not_valid_to_pay'),
                 status: HttpResponse::HTTP_UNPROCESSABLE_ENTITY
             );
         }
@@ -40,14 +40,14 @@ class PaymentController extends ApiController
     {
         if ($payment->isAlreadyVerified()) {
             return $this->failure(
-                message: 'Payment is already verified.',
+                message: __('api.payment_already_verified'),
                 status: HttpResponse::HTTP_UNPROCESSABLE_ENTITY
             );
         }
 
         if (! $payment->isPendingToVerify() || ! $this->isValidVerifyRequest($request, $payment)) {
             return $this->failure(
-                message: 'Payment is not valid to verify.',
+                message: __('api.payment_not_valid_to_verify'),
                 status: HttpResponse::HTTP_UNPROCESSABLE_ENTITY
             );
         }

@@ -26,4 +26,17 @@ return [
     'gateway_timeout' => 'Gateway timeout',
 
     'unknown_error' => 'An unknown error occurred',
+    'seat_unavailable' => 'Seat :seatId is no longer available',
+    'seat_gender_conflict' => 'Seat :seatName cannot be booked due to gender policy conflict with adjacent seat :adjacentSeatName',
+    'unexpected_reservation_error' => 'Unexpected error during trip reservation',
+    'reservation_failed' => 'An unexpected error occurred during reservation.',
+    'error_cancelling_reservation' => 'Error cancelling trip reservation',
+    'cancellation_failed' => 'An error occurred while cancelling the reservation.',
+    'duplicate_passengers' => 'Duplicate passengers found in request',
+    'order_no_items' => 'Order has no items to fulfill',
+    'seats_not_belong_to_order' => 'Some seats do not belong to this order',
+    'order_not_valid_to_pay' => 'Order is not valid to pay.',
+    'payment_already_verified' => 'Payment is already verified.',
+    'payment_not_valid_to_verify' => 'Payment is not valid to verify.',
+    'order_cannot_be_cancelled' => 'This order cannot be cancelled.',
 ];
