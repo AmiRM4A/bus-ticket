@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models;
+namespace Modules\Payments\Models;
 
 use App\Enums\PaymentStatusEnum;
 use Carbon\Carbon;
@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Modules\Orders\Models\Order;
 
 class Payment extends Model
 {

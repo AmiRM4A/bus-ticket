@@ -1,11 +1,11 @@
 <?php
 
-namespace Database\Factories;
+namespace Modules\Payments\Database\Factories;
 
 use App\Enums\PaymentStatusEnum;
-use App\Models\Order;
-use App\Models\Payment;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Modules\Orders\Models\Order;
+use Modules\Payments\Models\Payment;
 
 class PaymentFactory extends Factory
 {

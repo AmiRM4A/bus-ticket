@@ -5,5 +5,6 @@
     "Passengers": true,
     "Locations": true,
     "Trips": true,
-    "Orders": true
+    "Orders": true,
+    "Payments": true
 }
