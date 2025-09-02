@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Modules\Orders\Database\Factories\OrderItemFactory;
 use Modules\Passengers\Models\Passenger;
 use Modules\Trips\Models\TripSeat;
 
@@ -33,5 +34,13 @@ class OrderItem extends Model
     public function passenger(): BelongsTo
     {
         return $this->belongsTo(Passenger::class);
+    }
+
+    /**
+     * Create a new factory instance for the model.
+     */
+    protected static function newFactory(): OrderItemFactory
+    {
+        return OrderItemFactory::new();
     }
 }

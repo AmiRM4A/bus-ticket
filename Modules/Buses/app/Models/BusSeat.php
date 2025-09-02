@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Modules\Buses\Database\Factories\BusSeatFactory;
+use Modules\Trips\Models\TripSeat;
 
 class BusSeat extends Model
 {
@@ -23,13 +25,16 @@ class BusSeat extends Model
         return $this->belongsTo(Bus::class, 'bus_id');
     }
 
-    public function reservations(): HasMany
-    {
-        return $this->hasMany(BusReservation::class, 'seat_id');
-    }
-
     public function tripSeats(): HasMany
     {
         return $this->hasMany(TripSeat::class);
+    }
+
+    /**
+     * Create a new factory instance for the model.
+     */
+    protected static function newFactory(): BusSeatFactory
+    {
+        return BusSeatFactory::new();
     }
 }

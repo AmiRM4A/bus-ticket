@@ -4,6 +4,9 @@ namespace Modules\Orders\Providers;
 
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
+use Modules\Orders\Services\OrderItemService;
+use Modules\Orders\Services\OrderService;
+use Modules\Trips\Services\TripSeatService;
 use Nwidart\Modules\Traits\PathNamespace;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
@@ -36,6 +39,17 @@ class OrdersServiceProvider extends ServiceProvider
     {
         $this->app->register(EventServiceProvider::class);
         $this->app->register(RouteServiceProvider::class);
+
+        $this->app->singleton(OrderService::class, function ($app) {
+            return new OrderService(
+                $app->make(TripSeatService::class),
+                $app->make(OrderItemService::class),
+            );
+        });
+
+        $this->app->singleton(OrderItemService::class, function () {
+            return new OrderItemService;
+        });
     }
 
     /**
@@ -129,7 +143,7 @@ class OrdersServiceProvider extends ServiceProvider
 
         $this->loadViewsFrom(array_merge($this->getPublishableViewPaths(), [$sourcePath]), $this->nameLower);
 
-        Blade::componentNamespace(config('modules.namespace').'\\' . $this->name . '\\View\\Components', $this->nameLower);
+        Blade::componentNamespace(config('modules.namespace').'\\'.$this->name.'\\View\\Components', $this->nameLower);
     }
 
     /**

@@ -9,6 +9,10 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Modules\Drivers\Models\Driver;
+use Modules\Orders\Models\Order;
+use Modules\Passengers\Models\Passenger;
+use Modules\Users\Database\Factories\UserFactory;
 
 class User extends Authenticatable
 {
@@ -56,5 +60,13 @@ class User extends Authenticatable
     public function driver(): HasOne
     {
         return $this->hasOne(Driver::class);
+    }
+
+    /**
+     * Create a new factory instance for the model.
+     */
+    protected static function newFactory(): UserFactory
+    {
+        return UserFactory::new();
     }
 }

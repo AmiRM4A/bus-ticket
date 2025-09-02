@@ -4,6 +4,7 @@ namespace Modules\Orders\Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Modules\Orders\Models\Order;
+use Modules\Orders\Models\OrderItem;
 use Modules\Passengers\Models\Passenger;
 use Modules\Trips\Models\TripSeat;
 

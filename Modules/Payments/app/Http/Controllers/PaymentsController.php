@@ -2,55 +2,55 @@
 
 namespace Modules\Payments\Http\Controllers;
 
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\ApiController;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Modules\Payments\Models\Payment;
+use Modules\Payments\Services\PaymentService;
+use Symfony\Component\HttpFoundation\Response as HttpResponse;
 
-class PaymentsController extends Controller
+class PaymentsController extends ApiController
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        return view('payments::index');
+    public function __construct(
+        private readonly PaymentService $paymentService
+    ) {
+        //
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function callback(Request $request, Payment $payment): JsonResponse
     {
-        return view('payments::create');
+        if ($payment->isAlreadyVerified()) {
+            return $this->failure(
+                message: __('api.payment_already_verified'),
+                status: HttpResponse::HTTP_UNPROCESSABLE_ENTITY
+            );
+        }
+
+        if (! $payment->isPendingToVerify() || ! $this->isValidVerifyRequest($request, $payment)) {
+            return $this->failure(
+                message: __('api.payment_not_valid_to_verify'),
+                status: HttpResponse::HTTP_UNPROCESSABLE_ENTITY
+            );
+        }
+
+        $this->paymentService->verify($payment);
+
+        return $this->success();
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request) {}
-
-    /**
-     * Show the specified resource.
-     */
-    public function show($id)
+    private function isValidVerifyRequest(Request $request, Payment $payment): bool
     {
-        return view('payments::show');
+        // This part verifies the request's params
+        //        if ($request->get('Status') !== 'OK') {
+        //            $payment->update(['status' => PaymentStatusEnum::FAILED]);
+        //
+        //            return false;
+        //        }
+
+        //        if ($request->get('Authority') !== $payment->authority) {
+        //            return false;
+        //        }
+
+        return true;
     }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit($id)
-    {
-        return view('payments::edit');
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, $id) {}
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy($id) {}
 }

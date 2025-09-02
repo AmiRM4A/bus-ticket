@@ -3,8 +3,8 @@
 namespace Modules\Drivers\Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Modules\Users\Models\User;
 use Modules\Drivers\Models\Driver;
+use Modules\Users\Models\User;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\Modules\Drivers\Models\Driver>

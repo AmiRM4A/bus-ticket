@@ -5,6 +5,7 @@ namespace Modules\Trips\Database\Factories;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Modules\Passengers\Models\Passenger;
 use Modules\Trips\Models\Trip;
+use Modules\Trips\Models\TripReservation;
 use Modules\Trips\Models\TripSeat;
 
 /**

@@ -3,6 +3,6 @@
 use Illuminate\Support\Facades\Route;
 use Modules\Payments\Http\Controllers\PaymentsController;
 
-Route::middleware(['auth:sanctum'])->prefix('v1')->group(function () {
-    Route::apiResource('payments', PaymentsController::class)->names('payments');
+Route::prefix('v1/payments')->name('payments.')->group(function () {
+    Route::get('callback/{payment:transaction_id}', [PaymentsController::class, 'callback'])->name('callback');
 });

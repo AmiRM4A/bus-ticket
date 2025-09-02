@@ -2,8 +2,17 @@
 
 namespace Modules\Trips\Providers;
 
+use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
+use Modules\Buses\BusSeatService;
+use Modules\Orders\Services\OrderItemService;
+use Modules\Orders\Services\OrderService;
+use Modules\Passengers\Services\PassengerService;
+use Modules\Payments\Services\PaymentService;
+use Modules\Trips\Console\ReleaseExpiredSeats;
+use Modules\Trips\Services\TripReservationService;
+use Modules\Trips\Services\TripSeatService;
 use Nwidart\Modules\Traits\PathNamespace;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
@@ -27,6 +36,11 @@ class TripsServiceProvider extends ServiceProvider
         $this->registerConfig();
         $this->registerViews();
         $this->loadMigrationsFrom(module_path($this->name, 'database/migrations'));
+
+        $this->app->booted(function () {
+            $schedule = $this->app->make(Schedule::class);
+            $schedule->command('app:release-expired-seats')->everyMinute();
+        });
     }
 
     /**
@@ -36,6 +50,23 @@ class TripsServiceProvider extends ServiceProvider
     {
         $this->app->register(EventServiceProvider::class);
         $this->app->register(RouteServiceProvider::class);
+
+        $this->app->singleton(TripReservationService::class, function ($app) {
+            return new TripReservationService(
+                $app->make(PassengerService::class),
+                $app->make(TripSeatService::class),
+                $app->make(OrderService::class),
+                $app->make(PaymentService::class),
+                $app->make(OrderItemService::class),
+            );
+        });
+
+        $this->app->singleton(TripSeatService::class, function () {
+            return new TripSeatService(
+                config('app.seat_reservation_ttl_minutes'),
+                $this->app->make(BusSeatService::class)
+            );
+        });
     }
 
     /**
@@ -43,7 +74,9 @@ class TripsServiceProvider extends ServiceProvider
      */
     protected function registerCommands(): void
     {
-        // $this->commands([]);
+        $this->commands([
+            ReleaseExpiredSeats::class,
+        ]);
     }
 
     /**
@@ -129,7 +162,7 @@ class TripsServiceProvider extends ServiceProvider
 
         $this->loadViewsFrom(array_merge($this->getPublishableViewPaths(), [$sourcePath]), $this->nameLower);
 
-        Blade::componentNamespace(config('modules.namespace').'\\' . $this->name . '\\View\\Components', $this->nameLower);
+        Blade::componentNamespace(config('modules.namespace').'\\'.$this->name.'\\View\\Components', $this->nameLower);
     }
 
     /**

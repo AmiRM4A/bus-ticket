@@ -2,10 +2,10 @@
 
 namespace Modules\Orders\Database\Factories;
 
-use App\Enums\OrderStatusEnum;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Modules\Users\Models\User;
+use Modules\Orders\Enums\OrderStatusEnum;
 use Modules\Orders\Models\Order;
+use Modules\Users\Models\User;
 
 class OrderFactory extends Factory
 {

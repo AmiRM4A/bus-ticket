@@ -2,12 +2,14 @@
 
 namespace Modules\Orders\Models;
 
-use App\Enums\OrderStatusEnum;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Modules\Orders\Database\Factories\OrderFactory;
+use Modules\Orders\Enums\OrderStatusEnum;
+use Modules\Payments\Models\Payment;
 use Modules\Users\Models\User;
 
 class Order extends Model
@@ -100,5 +102,13 @@ class Order extends Model
     public function hasAnyItem(): bool
     {
         return $this->orderItems()->exists();
+    }
+
+    /**
+     * Create a new factory instance for the model.
+     */
+    protected static function newFactory(): OrderFactory
+    {
+        return OrderFactory::new();
     }
 }

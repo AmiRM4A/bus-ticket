@@ -24,26 +24,28 @@ class BusesDatabaseSeeder extends Seeder
                 return $drivers->random()->id;
             }]);
 
-            // Create seats for buses
+            // Create seats for buses (limited to 4 rows only)
             $buses = Bus::all();
             $busSeatsToInsert = [];
             $now = now();
+            $columns = ['A', 'B', 'C', 'D'];
 
             foreach ($buses as $bus) {
-                for ($i = 1; $i <= $bus->seats_count; $i++) {
-                    $busSeatsToInsert[] = [
-                        'bus_id' => $bus->id,
-                        'name' => "Seat {$i}",
-                        'row' => ceil($i / 4),
-                        'column' => match (($i - 1) % 4) {
-                            0 => 'A',
-                            1 => 'B',
-                            2 => 'C',
-                            3 => 'D',
-                        },
-                        'created_at' => $now,
-                        'updated_at' => $now,
-                    ];
+                $seatNumber = 1;
+
+                // Generate seats for exactly 4 rows
+                for ($row = 1; $row <= 4; $row++) {
+                    for ($columnIndex = 0; $columnIndex < 4; $columnIndex++) {
+                        $busSeatsToInsert[] = [
+                            'bus_id' => $bus->id,
+                            'name' => "Seat {$seatNumber}",
+                            'row' => $row,
+                            'column' => $columns[$columnIndex],
+                            'created_at' => $now,
+                            'updated_at' => $now,
+                        ];
+                        $seatNumber++;
+                    }
                 }
             }
 

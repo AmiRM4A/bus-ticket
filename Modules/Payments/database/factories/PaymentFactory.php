@@ -2,9 +2,9 @@
 
 namespace Modules\Payments\Database\Factories;
 
-use App\Enums\PaymentStatusEnum;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Modules\Orders\Models\Order;
+use Modules\Payments\Enums\PaymentStatusEnum;
 use Modules\Payments\Models\Payment;
 
 class PaymentFactory extends Factory

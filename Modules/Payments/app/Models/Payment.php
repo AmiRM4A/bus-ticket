@@ -2,13 +2,14 @@
 
 namespace Modules\Payments\Models;
 
-use App\Enums\PaymentStatusEnum;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Modules\Orders\Models\Order;
+use Modules\Payments\Database\Factories\PaymentFactory;
+use Modules\Payments\Enums\PaymentStatusEnum;
 
 class Payment extends Model
 {
@@ -53,5 +54,13 @@ class Payment extends Model
     public function scopeForOrder(Builder $query, int $order_id): Builder
     {
         return $query->whereOrderId($order_id);
+    }
+
+    /**
+     * Create a new factory instance for the model.
+     */
+    protected static function newFactory(): PaymentFactory
+    {
+        return PaymentFactory::new();
     }
 }

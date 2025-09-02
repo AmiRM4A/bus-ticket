@@ -2,55 +2,51 @@
 
 namespace Modules\Orders\Http\Controllers;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use App\Http\Controllers\ApiController;
+use Illuminate\Http\JsonResponse;
+use Modules\Orders\Http\Resources\OrderResource;
+use Modules\Orders\Models\Order;
+use Modules\Payments\Services\PaymentService;
+use Symfony\Component\HttpFoundation\Response as HttpResponse;
 
-class OrdersController extends Controller
+class OrdersController extends ApiController
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        return view('orders::index');
+    public function __construct(
+        private readonly PaymentService $paymentService
+    ) {
+        //
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function show(int $order_id): JsonResponse
     {
-        return view('orders::create');
+        $order = Order::forUser(auth()->id())
+            ->with([
+                'orderItems:trip_seat_id,passenger_id,order_id',
+                'orderItems.passenger:id,first_name,last_name,national_code',
+                'orderItems.tripSeat:id,trip_id',
+                'orderItems.tripSeat.trip:id',
+            ])
+            ->findOrFail($order_id);
+
+        return $this->success(new OrderResource($order));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request) {}
-
-    /**
-     * Show the specified resource.
-     */
-    public function show($id)
+    public function checkout(int $order_id): JsonResponse
     {
-        return view('orders::show');
+        $order = Order::forUser(auth()->id())
+            ->findOrFail($order_id);
+
+        if (! $order->canPay()) { // Check if order is valid to pay (status)
+            return $this->failure(
+                message: __('api.order_not_valid_to_pay'),
+                status: HttpResponse::HTTP_UNPROCESSABLE_ENTITY
+            );
+        }
+
+        $paymentLink = $this->paymentService->createPaymentLink($order);
+
+        return $this->success([
+            'payment_link' => $paymentLink,
+        ]);
     }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit($id)
-    {
-        return view('orders::edit');
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, $id) {}
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy($id) {}
 }

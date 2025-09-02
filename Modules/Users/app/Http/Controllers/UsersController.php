@@ -2,55 +2,58 @@
 
 namespace Modules\Users\Http\Controllers;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use App\Http\Controllers\ApiController;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Modules\Users\Http\Requests\LoginRequest;
+use Modules\Users\Http\Requests\RegisterRequest;
+use Modules\Users\Http\Resources\UserResource;
+use Modules\Users\Models\User;
+use Symfony\Component\HttpFoundation\Response as HttpStatus;
 
-class UsersController extends Controller
+class UsersController extends ApiController
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    public function register(RegisterRequest $request): JsonResponse
     {
-        return view('users::index');
+        $user = User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+        ]);
+
+        $token = $user->createToken('auth_token')->plainTextToken;
+
+        return $this->success([
+            'user' => new UserResource($user),
+            'token' => $token,
+        ], status: HttpStatus::HTTP_CREATED);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function login(LoginRequest $request): JsonResponse
     {
-        return view('users::create');
+        if (! Auth::attempt($request->only('email', 'password'))) {
+            return $this->failure(status: HttpStatus::HTTP_UNAUTHORIZED);
+        }
+
+        $user = User::where('email', $request->email)->firstOrFail();
+        $token = $user->createToken('auth_token')->plainTextToken;
+
+        return $this->success([
+            'user' => new UserResource($user),
+            'token' => $token,
+        ]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request) {}
-
-    /**
-     * Show the specified resource.
-     */
-    public function show($id)
+    public function logout(): JsonResponse
     {
-        return view('users::show');
+        Auth::user()->tokens()->delete();
+
+        return $this->success();
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit($id)
+    public function me(): JsonResponse
     {
-        return view('users::edit');
+        return $this->success(new UserResource(Auth::user()));
     }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, $id) {}
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy($id) {}
 }

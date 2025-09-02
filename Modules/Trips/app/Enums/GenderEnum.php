@@ -20,4 +20,3 @@ enum GenderEnum: string
         return null;
     }
 }
-

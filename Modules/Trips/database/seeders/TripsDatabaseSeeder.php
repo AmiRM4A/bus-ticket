@@ -5,7 +5,12 @@ namespace Modules\Trips\Database\Seeders;
 use Faker\Factory as Faker;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use Modules\Buses\Models\Bus;
+use Modules\Buses\Models\BusSeat;
+use Modules\Locations\Models\Province;
 use Modules\Trips\Enums\TripSeatStatusEnum;
+use Modules\Trips\Models\Trip;
+use Modules\Trips\Models\TripSeat;
 
 class TripsDatabaseSeeder extends Seeder
 {

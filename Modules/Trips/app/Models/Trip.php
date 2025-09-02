@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Modules\Buses\Models\Bus;
 use Modules\Locations\Models\Province;
+use Modules\Trips\Database\Factories\TripFactory;
 
 class Trip extends Model
 {
@@ -54,5 +55,13 @@ class Trip extends Model
     public function seats(): HasMany
     {
         return $this->hasMany(TripSeat::class, 'trip_id');
+    }
+
+    /**
+     * Create a new factory instance for the model.
+     */
+    protected static function newFactory(): TripFactory
+    {
+        return TripFactory::new();
     }
 }

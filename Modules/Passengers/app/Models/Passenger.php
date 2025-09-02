@@ -5,6 +5,8 @@ namespace Modules\Passengers\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Modules\Passengers\Database\Factories\PassengerFactory;
+use Modules\Trips\Models\TripReservation;
 
 class Passenger extends Model
 {
@@ -27,5 +29,13 @@ class Passenger extends Model
     public function reservations(): HasMany
     {
         return $this->hasMany(TripReservation::class, 'passenger_id');
+    }
+
+    /**
+     * Create a new factory instance for the model.
+     */
+    protected static function newFactory(): PassengerFactory
+    {
+        return PassengerFactory::new();
     }
 }

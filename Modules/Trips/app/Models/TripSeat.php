@@ -8,6 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Modules\Buses\Models\BusSeat;
+use Modules\Orders\Models\OrderItem;
+use Modules\Trips\Database\Factories\TripSeatFactory;
 use Modules\Trips\Enums\TripSeatStatusEnum;
 
 class TripSeat extends Model
@@ -55,5 +57,13 @@ class TripSeat extends Model
     public function orderItems(): HasOne
     {
         return $this->hasOne(OrderItem::class);
+    }
+
+    /**
+     * Create a new factory instance for the model.
+     */
+    protected static function newFactory(): TripSeatFactory
+    {
+        return TripSeatFactory::new();
     }
 }
