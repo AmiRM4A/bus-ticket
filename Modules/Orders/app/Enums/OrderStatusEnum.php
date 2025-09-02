@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Enums;
+namespace Modules\Orders\Enums;
 
 use App\Traits\EnumValues;
 

@@ -1,12 +1,11 @@
 <?php
 
-namespace Database\Factories;
+namespace Modules\Orders\Database\Factories;
 
-use App\Models\Order;
-use App\Models\OrderItem;
-use App\Models\Passenger;
-use App\Models\TripSeat;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Modules\Orders\Models\Order;
+use Modules\Passengers\Models\Passenger;
+use Modules\Trips\Models\TripSeat;
 
 class OrderItemFactory extends Factory
 {

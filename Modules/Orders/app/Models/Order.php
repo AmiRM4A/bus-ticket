@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models;
+namespace Modules\Orders\Models;
 
 use App\Enums\OrderStatusEnum;
 use Illuminate\Database\Eloquent\Builder;
@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Modules\Users\Models\User;
 
 class Order extends Model
 {

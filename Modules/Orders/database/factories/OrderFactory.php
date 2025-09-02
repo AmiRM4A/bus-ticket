@@ -1,11 +1,11 @@
 <?php
 
-namespace Database\Factories;
+namespace Modules\Orders\Database\Factories;
 
 use App\Enums\OrderStatusEnum;
-use App\Models\Order;
-use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Modules\Users\Models\User;
+use Modules\Orders\Models\Order;
 
 class OrderFactory extends Factory
 {

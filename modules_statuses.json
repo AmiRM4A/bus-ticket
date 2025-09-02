@@ -4,5 +4,6 @@
     "Buses": true,
     "Passengers": true,
     "Locations": true,
-    "Trips": true
+    "Trips": true,
+    "Orders": true
 }

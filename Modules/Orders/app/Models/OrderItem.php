@@ -1,11 +1,13 @@
 <?php
 
-namespace App\Models;
+namespace Modules\Orders\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Modules\Passengers\Models\Passenger;
+use Modules\Trips\Models\TripSeat;
 
 class OrderItem extends Model
 {
