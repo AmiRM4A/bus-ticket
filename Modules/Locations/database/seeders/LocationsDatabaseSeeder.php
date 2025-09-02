@@ -1,12 +1,12 @@
 <?php
 
-namespace Database\Seeders;
+namespace Modules\Locations\Database\Seeders;
 
-use App\Models\Province;
+use DB;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
+use Modules\Locations\Models\Province;
 
-class ProvinceSeeder extends Seeder
+class LocationsDatabaseSeeder extends Seeder
 {
     /**
      * Run the database seeds.

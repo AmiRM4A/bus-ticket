@@ -2,5 +2,6 @@
     "Users": true,
     "Drivers": true,
     "Buses": true,
-    "Passengers": true
+    "Passengers": true,
+    "Locations": true
 }
