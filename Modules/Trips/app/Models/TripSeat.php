@@ -1,13 +1,14 @@
 <?php
 
-namespace App\Models;
+namespace Modules\Trips\Models;
 
-use App\Enums\TripSeatStatusEnum;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Modules\Buses\Models\BusSeat;
+use Modules\Trips\Enums\TripSeatStatusEnum;
 
 class TripSeat extends Model
 {

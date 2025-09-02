@@ -1,11 +1,13 @@
 <?php
 
-namespace App\Models;
+namespace Modules\Trips\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Modules\Buses\Models\Bus;
+use Modules\Locations\Models\Province;
 
 class Trip extends Model
 {

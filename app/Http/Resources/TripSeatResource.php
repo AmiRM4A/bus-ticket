@@ -3,10 +3,10 @@
 namespace App\Http\Resources;
 
 use App\Enums\GenderEnum;
-use App\Enums\TripSeatStatusEnum;
 use App\Models\TripSeat;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Modules\Trips\Enums\TripSeatStatusEnum;
 
 /**
  * @mixin TripSeat

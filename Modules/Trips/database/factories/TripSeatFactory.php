@@ -1,12 +1,12 @@
 <?php
 
-namespace Database\Factories;
+namespace Modules\Trips\Database\Factories;
 
-use App\Enums\TripSeatStatusEnum;
-use App\Models\BusSeat;
-use App\Models\Trip;
-use App\Models\TripSeat;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Modules\Buses\Models\BusSeat;
+use Modules\Trips\Enums\TripSeatStatusEnum;
+use Modules\Trips\Models\Trip;
+use Modules\Trips\Models\TripSeat;
 
 class TripSeatFactory extends Factory
 {

@@ -1,16 +1,24 @@
 <?php
 
-namespace Database\Factories;
+namespace Modules\Trips\Database\Factories;
 
-use App\Models\Bus;
-use App\Models\Province;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Modules\Buses\Models\Bus;
+use Modules\Locations\Models\Province;
+use Modules\Trips\Models\Trip;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Trip>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\Modules\Trips\Models\Trip>
  */
 class TripFactory extends Factory
 {
+    /**
+     * The name of the factory's corresponding model.
+     *
+     * @var string
+     */
+    protected $model = Trip::class;
+
     /**
      * Define the model's default state.
      *

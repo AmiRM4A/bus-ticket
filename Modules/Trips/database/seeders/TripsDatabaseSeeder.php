@@ -1,18 +1,13 @@
 <?php
 
-namespace Database\Seeders;
+namespace Modules\Trips\Database\Seeders;
 
-use App\Enums\TripSeatStatusEnum;
-use App\Models\Bus;
-use App\Models\BusSeat;
-use App\Models\Province;
-use App\Models\Trip;
-use App\Models\TripSeat;
 use Faker\Factory as Faker;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use Modules\Trips\Enums\TripSeatStatusEnum;
 
-class TripSeeder extends Seeder
+class TripsDatabaseSeeder extends Seeder
 {
     /**
      * Run the database seeds.

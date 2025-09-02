@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Enums;
+namespace Modules\Trips\Enums;
 
 use App\Traits\EnumValues;
 

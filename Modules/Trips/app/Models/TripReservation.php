@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Models;
+namespace Modules\Trips\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Modules\Passengers\Models\Passenger;
 
 class TripReservation extends Model
 {

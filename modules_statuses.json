@@ -3,5 +3,6 @@
     "Drivers": true,
     "Buses": true,
     "Passengers": true,
-    "Locations": true
+    "Locations": true,
+    "Trips": true
 }

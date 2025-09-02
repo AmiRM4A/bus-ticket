@@ -2,13 +2,13 @@
 
 namespace App\Services;
 
-use App\Enums\TripSeatStatusEnum;
 use App\Exceptions\InvalidSeatForReservation;
 use App\Models\BusSeat;
 use App\Models\Passenger;
 use App\Models\Trip;
 use App\Models\TripSeat;
 use Illuminate\Support\Collection;
+use Modules\Trips\Enums\TripSeatStatusEnum;
 
 readonly class TripSeatService
 {

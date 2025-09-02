@@ -4,7 +4,6 @@ namespace App\Console\Commands;
 
 use App\Enums\OrderStatusEnum;
 use App\Enums\PaymentStatusEnum;
-use App\Enums\TripSeatStatusEnum;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Payment;
@@ -14,6 +13,7 @@ use App\Services\PaymentService;
 use App\Services\TripSeatService;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
+use Modules\Trips\Enums\TripSeatStatusEnum;
 
 class ReleaseExpiredSeats extends Command
 {
