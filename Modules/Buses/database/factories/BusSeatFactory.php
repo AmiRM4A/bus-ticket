@@ -1,15 +1,23 @@
 <?php
 
-namespace Database\Factories;
+namespace Modules\Buses\Database\Factories;
 
-use App\Models\Bus;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Modules\Buses\Models\Bus;
+use Modules\Buses\Models\BusSeat;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\BusSeat>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\Modules\Buses\Models\BusSeat>
  */
 class BusSeatFactory extends Factory
 {
+    /**
+     * The name of the factory's corresponding model.
+     *
+     * @var string
+     */
+    protected $model = BusSeat::class;
+
     /**
      * Define the model's default state.
      *

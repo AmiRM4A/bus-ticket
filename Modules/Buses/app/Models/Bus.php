@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Models;
+namespace Modules\Buses\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Modules\Drivers\Models\Driver;
 
 class Bus extends Model
 {

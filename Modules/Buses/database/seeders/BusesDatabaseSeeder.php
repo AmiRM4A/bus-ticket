@@ -1,13 +1,14 @@
 <?php
 
-namespace Database\Seeders;
+namespace Modules\Buses\Database\Seeders;
 
-use App\Models\Bus;
-use App\Models\BusSeat;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use Modules\Buses\Models\Bus;
+use Modules\Buses\Models\BusSeat;
+use Modules\Drivers\Models\Driver;
 
-class BusSeatSeeder extends Seeder
+class BusesDatabaseSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -15,6 +16,15 @@ class BusSeatSeeder extends Seeder
     public function run(): void
     {
         DB::transaction(function () {
+            // Create drivers with associated users
+            $drivers = Driver::factory(5)->create();
+
+            // Create buses with drivers
+            Bus::factory(10)->create(['driver_id' => function () use ($drivers) {
+                return $drivers->random()->id;
+            }]);
+
+            // Create seats for buses
             $buses = Bus::all();
             $busSeatsToInsert = [];
             $now = now();
