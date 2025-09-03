@@ -1,61 +1,632 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+حتما. درخواست شما کاملاً منطقی است. تمیزکاری و واقعی‌تر کردن داده‌های نمونه، خوانایی و درک مستندات را بسیار بالا می‌برد.
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+نسخه نهایی مستندات را با اعمال تمام تغییرات درخواستی شما (اصلاح مقادیر JSON و اضافه کردن ستون‌های جداول) آماده کرده‌ام.
 
-## About Laravel
+---
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+# سیستم مدیریت بلیط اتوبوس – مستندات فنی و کسب‌وکار
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## ۱. خلاصه کلی
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+**سیستم مدیریت بلیط اتوبوس** یک اپلیکیشن بک‌اند است که بر پایه فریمورک **لاراول** توسعه داده شده. این سیستم با بهره‌گیری از پکیج `nwidart/laravel-modules`، توسعه داده شده است.
 
-## Learning Laravel
+این مستند با هدف **راه‌اندازی توسعه‌دهندگان جدید** تهیه شده است. در این مستند، ویژگی‌ها، فرآیندها و منطق کسب‌وکار با ارجاع مستقیم به موجودیت‌های پایگاه داده و سرویس‌های اصلی تشریح می‌شوند تا درک عمیقی از عملکرد سیستم ارائه گردد.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## ۲. ماژول‌ها و موجودیت‌های اصلی
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+### ۲.۱. ماژول کاربران
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+- **هدف:** مدیریت ثبت‌نام و احراز هویت کاربران سیستم.
 
-## Laravel Sponsors
+- **جدول اصلی:** `users` (`id`, `name`, `email`, `password`)
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+- **احراز هویت:** از طریق **ایمیل و رمز عبور**. پس از ورود موفق، یک توکن سنکتام برای کاربر صادر می‌شود. (صرفا لاگین و رجیستر عادی بوده و شامل سیستم دسترسی نمیشود).
 
-### Premium Partners
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+### ۲.۲. ماژول رانندگان
 
-## Contributing
+- **هدف:** مدیریت اطلاعات رانندگانی که به سفرها تخصیص داده می‌شوند.
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+- **جدول اصلی:** `drivers` (`id`, `name`, `mobile`)
 
-## Code of Conduct
+- **روابط:** یک راننده می‌تواند به چندین اتوبوس تخصیص داده شود.
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
 
-## Security Vulnerabilities
+### ۲.۳. ماژول اتوبوس‌ها
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+- **هدف:** مدیریت اطلاعات اتوبوس‌ها و ساختار صندلی‌های آن‌ها.
 
-## License
+- **جداول اصلی:**
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+  - `buses`: اطلاعات کلی اتوبوس (`id`, `model`, `plate`, `seats_count`).
+
+  - `bus_seats`: تعریف ساختار هر صندلی در اتوبوس (`id`, `bus_id`, `seat_number`).
+
+- **منطق:** به ازای هر اتوبوس، مجموعه‌ای از صندلی‌ها باید تعریف شوند. هر صندلی شامل ستون و ردیف خواهد بود (ستون میتواند A,B,C,D -- حداکثر ۴ ستون صندلی باشد. بعنوان مثال صندلی A5 یا B7. نمیتوان دو صندلی با یک شماره داشت)
+
+
+### ۲.۴. ماژول مکان‌ها
+
+- **هدف:** تعریف مبدأ و مقصد سفرها.
+
+- **جدول اصلی:** `provinces` (`id`, `name`).
+
+- **استفاده:** هر سفر دارای `from_province_id` و `to_province_id` برای مشخص کردن مسیر است.
+
+
+### ۲.۵. ماژول سفرها
+
+- **هدف:** مدیریت سفرهای برنامه‌ریزی‌شده، صندلی‌ها و رزروها. این ماژول **هسته اصلی** سیستم است.
+
+- **جداول اصلی:**
+
+  - `trips`: اطلاعات اصلی سفر (`id`, `bus_id`, `from_province_id`, `to_province_id`, `departure_time`, `price_per_seat`).
+
+  - `trip_seats`: در این جدول، صندلی‌های اتوبوس مربوطه (اتوبوس مشخص شده در bus_id) اساین میشوند. از این جدول برای رزرو موقت نیز استفاده خواهد شد (`id`, `trip_id`, `bus_seat_id`, `status`, `reserved_gender`, `expires_at`).
+
+  - `trip_reservations`: این جدول برای رزرو نهایی صندلی استفاده خواهد شد. بعد از رزرو موقت و پرداخت هزینه‌ی صندلی، آن صندلی برای مسافر مربوطه در این جدول ثبت خواهد شد (`id`, `user_id`, `trip_seat_id`, `passenger_id`, `order_item_id`).
+
+- **قوانین کلیدی این ماژول:**
+
+  - **انقضای رزرو:** رزروهای موقت به مدت **۱۰ دقیقه** معتبر هستند و بعد از این بازه، به وسیله‌ی Schedule به حالت اولیه خود باز میگردند و دوباره در دسترس خواهند بود.
+
+    - **چگونگی پیاده‌سازی:** یک **دستور زمان‌بندی‌شده** (Schedule) در پس‌زمینه هر دقیقه اجرا می‌شود. این دستور تمام رکوردهای `trip_seats` با وضعیت `reserved` که تاریخ `expires_at` آن‌ها گذشته است را پیدا کرده و وضعیت آن‌ها را به `available` برمی‌گرداند.
+
+  - **محدودیت جنسیت:** مسافری با یک جنسیت نمی‌تواند صندلی‌ای را رزرو کند که مستقیماً در مجاورت مسافری با جنسیت مخالف قرار دارد (از طریق شماره‌ی صندلی (ستون + ردیف) درحال رزرو، صندلی چپ و راست آن پیدا شده و جنسیت آن‌ها با صندلی فعلی بررسی میشود).
+
+    - **چگونگی پیاده‌سازی:** قبل از انجام رزرو، یک سرویس اختصاصی، صندلی مجاور (صندلی با شماره ستون متفاوت در همان ردیف) را بررسی می‌کند. اگر صندلی مجاور قبلاً رزرو شده باشد (وضعیت متفاوت از در دسترس)، سیستم جنسیت مسافر جدید را با مقدار فیلد `reserved_gender` صندلی مجاور مقایسه می‌کند. در صورت عدم تطابق، رزرو ناموفق خواهد بود.
+
+  - **کنترل همزمانی:** سیستم از رزرو همزمان یک صندلی توسط دو کاربر جلوگیری می‌کند (کانسپت Race Condition).
+
+    - **چگونگی پیاده‌سازی:** هنگام فرآیند رزرو، تمام عملیات دیتابیس درون یک Transaction انجام می‌شود. ردیف‌های مربوط به صندلی‌های درخواستی در جدول `trip_seats` قفل می‌شوند. این کار باعث می‌شود تا تراکنش‌های دیگر نتوانند این ردیف‌ها را تا پایان Transaction فعلی تغییر دهند و از رزرو دوباره توسط کاربران دیگر، جلوگیری می‌کند.
+
+
+### ۲.۶. ماژول مسافران
+
+- **هدف:** ذخیره اطلاعات مسافرانی که برای آن‌ها بلیط رزرو شده است.
+
+- **جدول اصلی:** `passengers` (`id`, `first_name`, `last_name`, `mobile`, `national_code`, `gender`).
+
+- **روابط:** هر مسافر میتواند چند بلیط اتوبوس رزرو کند (در سفر‌های جداگانه).
+
+
+### ۲.۷. ماژول سفارشات
+
+- **هدف:** مدیریت فرآیند رزرو از لحظه ایجاد تا پرداخت.
+
+- **جداول اصلی:**
+
+  - `orders`: اطلاعات کلی سفارش (`id`, `user_id`, `status`). وضعیت‌ها شامل `pending`, `completed`, `failed`, `cancelled` است.
+
+  - `order_items`: جزئیات هر صندلی رزرو شده در یک سفارش (`id`, `order_id`, `trip_seat_id`, `passenger_id`, `price`).
+
+- **منطق لغو رزرو:** اگر **تمام** آیتم‌های یک سفارش لغو شوند، وضعیت سفارش به لغو شده تغییر می‌کند. در غیراین صورت، صرفا آیتم‌های لغو شده لغو خواهند شد و سفارش همچنان امکان پرداخت خواهد داشت (بدلیل وجود آیتم‌های دیگر در سفارش).
+
+
+### ۲.۸. ماژول پرداخت‌ها
+
+- **هدف:** پردازش پرداخت‌های مربوط به سفارشات.
+
+- **جدول اصلی:** `payments` (`id`, `order_id`, `transaction_id`, `amount`, `status`). وضعیت‌ها شامل `pending`, `completed`, `failed` است.
+
+- فرآیند:
+
+  ۱. کاربر نقطه پایان مربوط به پرداخت را فراخوانی می‌کند.
+
+  ۲. سیستم یک رکورد پرداخت با وضعیت در انتظار ایجاد کرده و لینکی برای هدایت به درگاه پرداخت برمی‌گرداند.
+
+  ۳. پس از بازگشت از درگاه، پاسخ توسط سیستم اعتبارسنجی می‌شود.
+
+  ۴. در صورت موفقیت: وضعیت پرداخت و سفارش به تکمیل شده و وضعیت صندلی‌های سفر مرتبط به فروخته شده تغییر می‌کند.
+
+  ۵. در صورت شکست: وضعیت پرداخت و سفارش به ناموفق تغییر کرده و صندلی‌ها آزاد می‌شوند.
+
+
+---
+
+## ۳. فرآیند کامل کسب‌وکار
+
+۱. **احراز هویت:** کاربر با استفاده از اندپوینت‌های ثبت‌نام یا ورود، وارد سیستم شده و یک **توکن** دریافت می‌کند.
+
+۲. **جستجوی سفر:** کاربر با فراخوانی اندپوینت دریافت سفرها و استفاده از فیلترهایی مانند مبدأ، مقصد و تاریخ، لیست سفرهای موجود را مشاهده می‌کند.
+
+۳. **انتخاب سفر و مشاهده صندلی‌ها:** کاربر با درخواست جزئیات سفر، اطلاعات کامل سفر، از جمله نقشه صندلی‌ها و وضعیت هرکدام (در دسترس، رزرو شده، فروخته شده) را دریافت می‌کند.
+
+۴. **رزرو صندلی:**
+
+```
+- کاربر درخواست ایجاد رزرو را با اطلاعات مسافران و شناسه صندلی‌های درخواستی فراخوانی می‌کند.
+- سیستم صندلی‌های درخواستی را در دیتابیس **قفل** می‌کند.
+- وضعیت صندلی‌ها به رزرو شده تغییر کرده (درصورت عدم وجود محدودیت‌های جنسیتی) و زمان انقضا (۱۰ دقیقه) برای آن‌ها تنظیم می‌شود.
+- یک سفارش جدید با وضعیت در انتظار ایجاد می‌شود.
+- درخواست در پاسخ، شناسه سفارش را برمی‌گرداند.
+```
+
+۵. **پرداخت:**
+
+```
+- کاربر شناسه‌ی سفارش را به اندپوینت پرداخت سفارش (order checkout) میدهد.
+- سیستم لینک درگاه پرداخت را برمی‌گرداند.
+- کاربر به درگاه هدایت شده و پس از پرداخت، به **اندپوینت کالبک پرداخت** بازمی‌گردد.
+```
+
+۶. **تکمیل فرآیند:**
+
+```
+- **پرداخت موفق:** سرویس پرداخت، تراکنش را تأیید کرده، وضعیت سفارش و پرداخت را تکمیل شده و وضعیت صندلی‌ها را به فروخته شده تغییر میدهد. همچنین صندلی‌های رزرو شده توسط مسافران را در جدول trip_reservations ثبت میکند.
+- **پرداخت ناموفق یا انقضای زمان:** اگر پرداخت ناموفق باشد، کابر ۱۰ دقیقه زمان دارد تا دوباره پرداخت را انجام دهند (گرفتن لینک پرداخت مجدد). اگر پرداخت در **۱۰ دقیقه** انجام نشود، صندلی‌ها بصورت خودکار آزاد شده و سفارش و پرداخت مرتبط را لغو شده یا ناموفق می‌کند.
+```
+
+---
+
+## ۴. مستندات دقیق واسط‌های برنامه‌نویسی
+
+### ۴.۱. ماژول کاربران
+
+#### ثبت‌نام کاربر
+
+- **Method:** POST
+
+- **Path:** `v1/register`
+
+
+|پارامتر|نوع|اجباری|توضیحات|
+|---|---|---|---|
+|name|string|✓|نام کاربر|
+|email|string|✓|ایمیل کاربر|
+|password|string|✓|رمز عبور|
+|password_confirmation|string|✓|تکرار رمز عبور|
+
+**پاسخ موفق (201):**
+
+JSON
+
+```
+{
+  "message": "کاربر با موفقیت ثبت نام شد",
+  "user": {
+    "id": 1,
+    "name": "علی رضایی",
+    "email": "ali.rezaei@example.com",
+    "created_at": "2025-09-03T10:00:00Z"
+  },
+  "token": "1|aBcDeFgHiJkLmNoPqRsTuVwXyZ123456"
+}
+```
+
+**پاسخ خطا (422):**
+
+JSON
+
+```
+{
+  "message": "اطلاعات ارسال شده نامعتبر است.",
+  "errors": {
+    "email": ["این ایمیل قبلا ثبت شده است."],
+    "password": ["رمز عبور باید حداقل ۸ کاراکتر باشد."]
+  }
+}
+```
+
+#### ورود کاربر
+
+- **Method:** POST
+
+- **Path:** `v1/login`
+
+
+|پارامتر|نوع|اجباری|توضیحات|
+|---|---|---|---|
+|email|string|✓|ایمیل کاربر|
+|password|string|✓|رمز عبور|
+
+**پاسخ موفق (200):**
+
+JSON
+
+```
+{
+  "message": "ورود با موفقیت انجام شد",
+  "user": {
+    "id": 1,
+    "name": "علی رضایی",
+    "email": "ali.rezaei@example.com"
+  },
+  "token": "1|aBcDeFgHiJkLmNoPqRsTuVwXyZ123456"
+}
+```
+
+**پاسخ خطا (401):**
+
+JSON
+
+```
+{
+  "message": "ایمیل یا رمز عبور اشتباه است"
+}
+```
+
+#### خروج کاربر
+
+- **Method:** POST
+
+- **Path:** `v1/logout`
+
+- **احراز هویت:** مورد نیاز
+
+
+**پاسخ موفق (200):**
+
+JSON
+
+```
+{
+  "message": "خروج با موفقیت انجام شد"
+}
+```
+
+#### اطلاعات کاربر فعلی
+
+- **Method:** GET
+
+- **Path:** `v1/user`
+
+- **احراز هویت:** مورد نیاز
+
+
+**پاسخ موفق (200):**
+
+JSON
+
+```
+{
+  "id": 1,
+  "name": "علی رضایی",
+  "email": "ali.rezaei@example.com",
+  "created_at": "2025-09-03T10:00:00Z"
+}
+```
+
+### ۴.۲. ماژول سفرها
+
+#### لیست و فیلتر سفرها
+
+- **Method:** GET
+
+- **Path:** `v1/trips`
+
+- **احراز هویت:** مورد نیاز
+
+
+|پارامتر|نوع|اجباری|توضیحات|
+|---|---|---|---|
+|bus_id|integer|-|فیلتر بر اساس شناسه اتوبوس|
+|from_province_id|integer|-|فیلتر بر اساس شناسه استان مبدأ|
+|to_province_id|integer|-|فیلتر بر اساس شناسه استان مقصد|
+|min_price|decimal|-|فیلتر حداقل قیمت|
+|max_price|decimal|-|فیلتر حداکثر قیمت|
+|per_page|integer|-|تعداد نتایج در هر صفحه (پیش‌فرض: ۲۰)|
+
+**پاسخ موفق (200):**
+
+JSON
+
+```
+{
+  "status": 200,
+  "message": "عملیات با موفقیت انجام شد",
+  "data": {
+    "data": [
+      {
+        "id": 1,
+        "bus": {
+          "id": 1,
+          "model": "ولوو B9R",
+          "plate": "۱۲ع۳۴۵-۶۷",
+          "seats_count": 44
+        },
+        "origin": {
+          "id": 1,
+          "name": "تهران"
+        },
+        "destination": {
+          "id": 2,
+          "name": "اصفهان"
+        },
+        "total_seats": 44,
+        "reserved_seats_count": 0,
+        "trip_date": "2025-10-20",
+        "departure_time": "23:00:00",
+        "arrived_at": null,
+        "created_at": "2025-09-03T12:00:00Z",
+        "updated_at": "2025-09-03T12:00:00Z"
+      }
+    ],
+    "links": {
+      "first": "https://api.yourdomain.com/v1/trips?page=1",
+      "last": "https://api.yourdomain.com/v1/trips?page=1",
+      "prev": null,
+      "next": null
+    },
+    "meta": {
+      "current_page": 1,
+      "from": 1,
+      "last_page": 1,
+      "links": [
+        {
+          "url": null,
+          "label": "&laquo; قبلی",
+          "page": null,
+          "active": false
+        },
+        {
+          "url": "https://api.yourdomain.com/v1/trips?page=1",
+          "label": "1",
+          "page": 1,
+          "active": true
+        },
+        {
+          "url": null,
+          "label": "بعدی &raquo;",
+          "page": null,
+          "active": false
+        }
+      ],
+      "path": "https://api.yourdomain.com/v1/trips",
+      "per_page": 20,
+      "to": 1,
+      "total": 1
+    }
+  }
+}
+```
+
+#### ایجاد رزرو
+
+- **Method:** POST
+
+- **Path:** `v1/trips`
+
+- **احراز هویت:** مورد نیاز
+
+
+|پارامتر|نوع|اجباری|توضیحات|
+|---|---|---|---|
+|trip_id|integer|✓|شناسه سفر مورد نظر|
+|passengers|array|✓|آرایه‌ای از اطلاعات مسافران|
+|trip_seat_id|integer|✓|شناسه صندلی سفر برای هر مسافر|
+|first_name|string|✓|نام مسافر|
+|last_name|string|✓|نام خانوادگی مسافر|
+|mobile|string|✓|شماره موبایل مسافر|
+|national_code|string|✓|کد ملی مسافر|
+|gender|integer|✓|جنسیت مسافر (۰: زن، ۱: مرد)|
+
+**پاسخ موفق (201):**
+
+JSON
+
+```
+{
+  "message": "رزرو با موفقیت ایجاد شد",
+  "order": {
+    "id": 1,
+    "status": "pending",
+    "total_amount": 450000,
+    "expires_at": "2025-09-03T14:10:00Z",
+    "items": [
+      {
+        "trip_seat_id": 5,
+        "seat_number": "5A",
+        "passenger_name": "سارا محمدی"
+      }
+    ]
+  }
+}
+```
+
+#### نمایش جزئیات یک سفر
+
+- **Method:** GET
+
+- **Path:** `v1/trips/{trip_id}`
+
+- **احراز هویت:** مورد نیاز
+
+**پاسخ موفق (200):**
+
+JSON
+
+```
+{
+  "status": 200,
+  "message": "عملیات با موفقیت انجام شد",
+  "data": {
+    "id": 1,
+    "bus": {
+      "id": 1,
+      "model": "ولوو B9R",
+      "plate": "۱۲ع۳۴۵-۶۷",
+      "seats_count": 44
+    },
+    "seats": [
+      {
+        "id": 1,
+        "status": "AVAILABLE",
+        "name": "صندلی ۱",
+        "row": 1,
+        "column": "A",
+        "reserved_gender": null,
+        "is_available": true,
+        "is_reserved": false,
+        "is_sold": false
+      },
+      {
+        "id": 2,
+        "status": "SOLD",
+        "name": "صندلی ۲",
+        "row": 1,
+        "column": "B",
+        "reserved_gender": "مرد",
+        "is_available": false,
+        "is_reserved": false,
+        "is_sold": true
+      }
+    ],
+    "origin": {
+      "id": 1,
+      "name": "تهران"
+    },
+    "destination": {
+      "id": 2,
+      "name": "اصفهان"
+    },
+    "total_seats": 44,
+    "reserved_seats_count": 0,
+    "trip_date": "2025-10-20",
+    "departure_time": "23:00:00",
+    "arrived_at": null,
+    "created_at": "2025-09-03T12:00:00Z",
+    "updated_at": "2025-09-03T12:00:00Z"
+  }
+}
+```
+
+#### لغو رزرو
+
+- **Method:** DELETE
+
+- **Path:** `v1/trips/reservations/{order_id}`
+
+- **احراز هویت:** مورد نیاز
+
+
+| پارامتر  | نوع   | اجباری | توضیحات                                                     |
+| -------- | ----- | ------ | ----------------------------------------------------------- |
+| seat_ids | array | ✓      | آرایه‌ای از شناسه‌های صندلی برای لغو (آیدی صندلی در آن سفر) |
+
+**پاسخ موفق (200):**
+
+JSON
+
+```
+{
+  "message": "صندلی‌های انتخاب شده با موفقیت لغو شدند",
+  "order": {
+    "id": 1,
+    "status": "pending",
+    "remaining_items": 1
+  }
+}
+```
+
+### ۴.۳. ماژول سفارشات
+
+#### نمایش جزئیات سفارش
+
+- **Method:** GET
+
+- **Path:** `v1/orders/{order_id}`
+
+- **احراز هویت:** مورد نیاز
+
+
+|پارامتر|نوع|اجباری|توضیحات|
+|---|---|---|---|
+|order|integer|✓|شناسه سفارش|
+
+**پاسخ موفق (200):**
+
+JSON
+
+```
+{
+  "id": 1,
+  "status": "pending",
+  "total_amount": 900000,
+  "created_at": "2025-09-03T14:00:00Z",
+  "expires_at": "2025-09-03T14:10:00Z",
+  "items": [
+    {
+      "trip_seat_id": 5,
+      "seat_number": "5A",
+      "passenger": {
+        "first_name": "سارا",
+        "last_name": "محمدی",
+        "national_code": "0012345678"
+      },
+      "price": 450000
+    },
+    {
+      "trip_seat_id": 6,
+      "seat_number": "5B",
+      "passenger": {
+        "first_name": "علی",
+        "last_name": "رضایی",
+        "national_code": "0087654321"
+      },
+      "price": 450000
+    }
+  ],
+  "trip": {
+    "from_province": "تهران",
+    "to_province": "اصفهان",
+    "trip_date": "2025-10-20",
+    "departure_time": "23:00:00"
+  }
+}
+```
+
+#### پرداخت سفارش
+
+- **Method:** GET
+
+- **Path:** `v1/orders/checkout/{order_id}`
+
+- **احراز هویت:** مورد نیاز
+
+**پاسخ موفق (200):**
+
+JSON
+
+```
+{
+  "payment_url": "https://gateway.example.com/pay/a1b2c3d4e5f6",
+  "transaction_id": "c69186cb-6a3f-41f1-8538-1d0fa71e5268a",
+  "amount": 900000
+}
+```
+
+### ۴.۴. ماژول پرداخت‌ها
+
+#### تایید پرداخت (پاسخ درگاه)
+
+- **Method:** GET
+
+- **Path:** `v1/payments/callback/{transaction_id}`
+
+- **احراز هویت:** غیرضروری
+
+**پاسخ موفق (200):**
+
+JSON
+
+```
+{
+  "message": "پرداخت با موفقیت تایید شد",
+  "order": {
+    "id": 1,
+    "status": "completed",
+    "paid_at": "2025-09-03T14:05:15Z"
+  }
+}
+```
+
+**پاسخ خطا (404):**
+
+JSON
+
+```
+{
+  "message": "تراکنش نامعتبر است یا پرداخت ناموفق بوده است"
+}
+```
