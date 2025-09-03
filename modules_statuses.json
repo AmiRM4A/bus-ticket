@@ -1,0 +1,10 @@
+{
+    "Users": true,
+    "Drivers": true,
+    "Buses": true,
+    "Passengers": true,
+    "Locations": true,
+    "Trips": true,
+    "Orders": true,
+    "Payments": true
+}
