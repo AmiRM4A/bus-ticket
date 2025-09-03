@@ -5,7 +5,7 @@ namespace Modules\Trips\Providers;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
-use Modules\Buses\BusSeatService;
+use Modules\Buses\Services\BusSeatService;
 use Modules\Orders\Services\OrderItemService;
 use Modules\Orders\Services\OrderService;
 use Modules\Passengers\Services\PassengerService;

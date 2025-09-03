@@ -3,7 +3,7 @@
 namespace Modules\Trips\Services;
 
 use Illuminate\Support\Collection;
-use Modules\Buses\BusSeatService;
+use Modules\Buses\Services\BusSeatService;
 use Modules\Passengers\Models\Passenger;
 use Modules\Trips\Enums\TripSeatStatusEnum;
 use Modules\Trips\Exceptions\InvalidSeatForReservation;

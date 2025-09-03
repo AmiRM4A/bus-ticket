@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Buses;
+namespace Modules\Buses\Services;
 
 use Illuminate\Support\Collection;
 use Modules\Buses\Models\BusSeat;
