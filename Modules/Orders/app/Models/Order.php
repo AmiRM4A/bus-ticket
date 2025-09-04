@@ -100,9 +100,9 @@ class Order extends Model
         return $this->status(OrderStatusEnum::Cancelled);
     }
 
-    public function scopeForUser(Builder $query, int $user_id): Builder
+    public function scopeForUser(Builder $query, int $userId): Builder
     {
-        return $query->where('user_id', $user_id);
+        return $query->where('user_id', $userId);
     }
 
     public function hasAnyPayment(): bool

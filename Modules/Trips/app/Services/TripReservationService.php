@@ -3,12 +3,10 @@
 namespace Modules\Trips\Services;
 
 use DB;
-use Modules\Orders\Exceptions\InvalidOrderException;
+use Illuminate\Support\Collection;
 use Modules\Orders\Models\Order;
-use Modules\Orders\Services\OrderItemService;
 use Modules\Orders\Services\OrderService;
 use Modules\Passengers\Services\PassengerService;
-use Modules\Payments\Services\PaymentService;
 use Modules\Trips\Models\Trip;
 use Modules\Users\Models\User;
 use Throwable;
@@ -18,9 +16,7 @@ readonly class TripReservationService
     public function __construct(
         private PassengerService $passengerService,
         private TripSeatService $tripSeatService,
-        private OrderService $orderService,
-        private PaymentService $paymentService,
-        private OrderItemService $orderItemService,
+        private OrderService $orderService
     ) {
         //
     }
@@ -42,40 +38,30 @@ readonly class TripReservationService
         });
     }
 
-    /**
-     * @throws Throwable
-     */
-    public function cancelReservation(Order $order, ?array $seats_to_cancel = null): void
+    public function sellSeatsToPassengers(int $tripId, array $data)
     {
-        DB::transaction(function () use ($order, $seats_to_cancel) {
-            // If any seats provided, check if all the seats are belong to this order (Validation)
-            // Else, choose all seats (items) of the order to get deleted
-            if ($seats_to_cancel) {
-                $itemsCount = $this->orderItemService->getOrderItemsCountBySeatIds($order->id, $seats_to_cancel);
-                if (count($seats_to_cancel) !== $itemsCount) {
-                    throw new InvalidOrderException(__('api.seats_not_belong_to_order'));
-                }
-            } else {
-                $seats_to_cancel = $this->orderItemService->getItemsForOrder($order->id, ['trip_seat_id'])
-                    ->pluck('trip_seat_id')
-                    ->toArray();
-            }
+        dd($tripId, $data);
 
-            // Mark order items as deleted
-            $this->orderItemService->deleteByTripSeatId($seats_to_cancel);
+        // Mark seats as sold (for the trip)
+        $seatIds = $items->pluck('trip_seat_id')->toArray();
+        $this->tripSeatService->markTripSeatsAsSold($seatIds);
+    }
 
-            // Release seats
-            $this->tripSeatService->releaseSeats($seats_to_cancel);
+    private function prepareReservationsData(Collection $items): array
+    {
+        $now = now();
+        $reservationsToCreate = [];
 
-            // Cancel order's payment(s)
-            $this->paymentService->cancelPaymentsForOrder($order->id);
+        foreach ($items as $item) {
+            $reservationsToCreate[] = [
+                'passenger_id' => $item->passenger_id,
+                'trip_id' => $item->tripSeat->trip_id,
+                'trip_seat_id' => $item->trip_seat_id,
+                'created_at' => $now,
+                'updated_at' => $now,
+            ];
+        }
 
-            if (! $this->orderItemService->orderHasItems($order->id)) {
-                // Cancel order if there isn't any item for this order anymore
-                $this->orderService->cancelOrder($order->id);
-            }
-
-            // Also we can add the canceled seats count to the trip's available seats
-        });
+        return $reservationsToCreate;
     }
 }

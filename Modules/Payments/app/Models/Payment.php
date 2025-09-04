@@ -43,17 +43,17 @@ class Payment extends Model
         return $this->status === PaymentStatusEnum::PENDING;
     }
 
-    public function markAsVerified(?Carbon $paid_at = null): bool
+    public function markAsVerified(?Carbon $paidAt = null): bool
     {
         return $this->update([
             'status' => PaymentStatusEnum::SUCCESS,
-            'paid_at' => $paid_at ?? now(),
+            'paid_at' => $paidAt ?? now(),
         ]);
     }
 
-    public function scopeForOrder(Builder $query, int $order_id): Builder
+    public function scopeForOrder(Builder $query, int $orderId): Builder
     {
-        return $query->whereOrderId($order_id);
+        return $query->whereOrderId($orderId);
     }
 
     /**

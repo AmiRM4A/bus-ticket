@@ -3,6 +3,8 @@
 namespace Modules\Orders\Providers;
 
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
+use Modules\Orders\Listeners\FulfillOrder;
+use Modules\Payments\Events\PaymentVerified;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -11,7 +13,11 @@ class EventServiceProvider extends ServiceProvider
      *
      * @var array<string, array<int, string>>
      */
-    protected $listen = [];
+    protected $listen = [
+        PaymentVerified::class => [
+            FulfillOrder::class,
+        ],
+    ];
 
     /**
      * Indicates if events should be discovered.

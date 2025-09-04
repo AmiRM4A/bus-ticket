@@ -6,10 +6,8 @@ use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
 use Modules\Buses\Services\BusSeatService;
-use Modules\Orders\Services\OrderItemService;
 use Modules\Orders\Services\OrderService;
 use Modules\Passengers\Services\PassengerService;
-use Modules\Payments\Services\PaymentService;
 use Modules\Trips\Console\ReleaseExpiredSeats;
 use Modules\Trips\Services\TripReservationService;
 use Modules\Trips\Services\TripSeatService;
@@ -55,15 +53,13 @@ class TripsServiceProvider extends ServiceProvider
             return new TripReservationService(
                 $app->make(PassengerService::class),
                 $app->make(TripSeatService::class),
-                $app->make(OrderService::class),
-                $app->make(PaymentService::class),
-                $app->make(OrderItemService::class),
+                $app->make(OrderService::class)
             );
         });
 
         $this->app->singleton(TripSeatService::class, function () {
             return new TripSeatService(
-                config('app.seat_reservation_ttl_minutes'),
+                config('trips.seat_reservation_ttl_minutes'),
                 $this->app->make(BusSeatService::class)
             );
         });
