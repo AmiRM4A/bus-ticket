@@ -45,8 +45,8 @@ class OrderItem extends Model
         return OrderItemFactory::new();
     }
 
-    public function scopeForOrder(Builder $builder, int $order_id): Builder
+    public function scopeForOrder(Builder $builder, int $orderId): Builder
     {
-        return $builder->where('order_id', $order_id);
+        return $builder->where('order_id', $orderId);
     }
 }

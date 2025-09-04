@@ -35,18 +35,18 @@ class OrderItemService
         return OrderItem::where('order_id', $orderId)->exists();
     }
 
-    public function getOrderItemsCountBySeatIds(int $orderId, array $seatIds): int
+    public function getOrderItemsCount(int $orderId, array $itemIds): int
     {
         return OrderItem::where('order_id', $orderId)
-            ->whereIn('trip_seat_id', $seatIds)
+            ->whereIn('id', $itemIds)
             ->count();
     }
 
-    public function deleteByTripSeatId(int|array $id): ?bool
+    public function deleteItem(int|array $id): ?bool
     {
         $id = is_int($id) ? [$id] : $id;
 
-        return OrderItem::whereIn('trip_seat_id', $id)->delete();
+        return OrderItem::whereIn('id', $id)->delete();
     }
 
     public function findOrderIdsBySeatIds(array $seatIds): array
@@ -57,36 +57,15 @@ class OrderItemService
             ->all();
     }
 
-    public function getItemsBySeatIds(array $seatIds): Collection
+    public function getItemsForOrder(int $orderId, array $columns = ['*']): Collection
     {
-        return OrderItem::whereIn('trip_seat_id', $seatIds)->get();
+        return OrderItem::forOrder($orderId)->get($columns);
     }
 
-    public function prepareReservationsData(Collection $items): array
+    public function getTripSeatsIdsByItemIds(array $itemIds): array
     {
-        $now = now();
-        $reservationsToCreate = [];
-
-        foreach ($items as $item) {
-            $reservationsToCreate[] = [
-                'passenger_id' => $item->passenger_id,
-                'trip_id' => $item->tripSeat->trip_id,
-                'trip_seat_id' => $item->trip_seat_id,
-                'created_at' => $now,
-                'updated_at' => $now,
-            ];
-        }
-
-        return $reservationsToCreate;
-    }
-
-    public function getSeatIdsFromItems(Collection $items): array
-    {
-        return $items->pluck('trip_seat_id')->toArray();
-    }
-
-    public function getItemsForOrder(int $order_id, array $columns = ['*']): Collection
-    {
-        return OrderItem::forOrder($order_id)->get($columns);
+        return OrderItem::whereIn('id', $itemIds)
+            ->pluck('trip_seat_id')
+            ->toArray();
     }
 }

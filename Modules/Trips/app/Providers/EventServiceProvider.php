@@ -3,6 +3,8 @@
 namespace Modules\Trips\Providers;
 
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
+use Modules\Orders\Events\OrderCancelled;
+use Modules\Trips\Listeners\RevertCancelledTripSeats;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -11,7 +13,11 @@ class EventServiceProvider extends ServiceProvider
      *
      * @var array<string, array<int, string>>
      */
-    protected $listen = [];
+    protected $listen = [
+        OrderCancelled::class => [
+            RevertCancelledTripSeats::class,
+        ],
+    ];
 
     /**
      * Indicates if events should be discovered.

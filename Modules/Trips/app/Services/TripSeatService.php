@@ -8,6 +8,7 @@ use Modules\Passengers\Models\Passenger;
 use Modules\Trips\Enums\TripSeatStatusEnum;
 use Modules\Trips\Exceptions\InvalidSeatForReservation;
 use Modules\Trips\Models\Trip;
+use Modules\Trips\Models\TripReservation;
 use Modules\Trips\Models\TripSeat;
 
 readonly class TripSeatService
@@ -149,5 +150,34 @@ readonly class TripSeatService
                 ])
             );
         }
+    }
+
+    public function sellSeatsToPassengers(int $tripId, array $data): void
+    {
+        // Sell seats to passengers
+        $sellingData = $this->prepareSellingData($tripId, $data);
+        TripReservation::insert($sellingData);
+
+        // Mark seats as sold (for the trip)
+        $seatIds = array_keys($data);
+        $this->markTripSeatsAsSold($seatIds);
+    }
+
+    private function prepareSellingData(int $tripId, array $data): array
+    {
+        $now = now();
+        $reservationsToCreate = [];
+
+        foreach ($data as $tripSeatId => $passengerId) {
+            $reservationsToCreate[] = [
+                'passenger_id' => $passengerId,
+                'trip_id' => $tripId,
+                'trip_seat_id' => $tripSeatId,
+                'created_at' => $now,
+                'updated_at' => $now,
+            ];
+        }
+
+        return $reservationsToCreate;
     }
 }

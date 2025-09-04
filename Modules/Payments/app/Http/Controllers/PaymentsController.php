@@ -38,7 +38,7 @@ class PaymentsController extends ApiController
 
         return $this->success(
             new PaymentVerifiedResource($payment),
-            __('api.payment_verified_successfully')
+            __('api.success')
         );
     }
 

@@ -7,9 +7,9 @@ use Modules\Buses\Models\BusSeat;
 
 class BusSeatService
 {
-    public function getSeatMap(int $bus_id): Collection
+    public function getSeatMap(int $busId): Collection
     {
-        return BusSeat::where('bus_id', $bus_id)
+        return BusSeat::where('bus_id', $busId)
             ->get()
             ->keyBy(function ($seat) {
                 return $seat->row.'_'.$seat->column;

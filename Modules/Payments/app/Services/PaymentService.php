@@ -5,19 +5,13 @@ namespace Modules\Payments\Services;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Modules\Orders\Models\Order;
-use Modules\Orders\Services\OrderService;
 use Modules\Payments\Enums\PaymentStatusEnum;
+use Modules\Payments\Events\PaymentVerified;
 use Modules\Payments\Models\Payment;
 use Throwable;
 
 readonly class PaymentService
 {
-    public function __construct(
-        private OrderService $orderService
-    ) {
-        //
-    }
-
     public function createPaymentLink(Payment $payment): string
     {
         // Create payment link here (by using the $payment's price and transaction_id)
@@ -29,14 +23,12 @@ readonly class PaymentService
     public function verify(Payment $payment): void
     {
         try {
+            // Payment verification
             $this->verifyPaymentFromPSP($payment);
-
-            DB::beginTransaction();
-
             $payment->markAsVerified();
-            $this->orderService->fulfillOrder($payment->order);
 
-            DB::commit();
+            // Dispatching event for fulfilling the order of payment
+            PaymentVerified::dispatch($payment->id, $payment->order_id);
         } catch (Throwable $th) {
             DB::rollBack();
             throw $th;
@@ -51,9 +43,9 @@ readonly class PaymentService
         return true;
     }
 
-    public function cancelPaymentsForOrder(int $order_id): void
+    public function cancelPaymentsForOrder(int $orderId): void
     {
-        Payment::forOrder($order_id)
+        Payment::forOrder($orderId)
             ->update(['status' => PaymentStatusEnum::CANCELLED]);
     }
 
@@ -66,9 +58,9 @@ readonly class PaymentService
         ]);
     }
 
-    public function cancelByOrderIds(array $order_ids): bool
+    public function cancelByOrderIds(array $orderIds): bool
     {
-        return Payment::whereIn('order_id', $order_ids)
+        return Payment::whereIn('order_id', $orderIds)
             ->update(['status' => PaymentStatusEnum::CANCELLED]);
     }
 }
