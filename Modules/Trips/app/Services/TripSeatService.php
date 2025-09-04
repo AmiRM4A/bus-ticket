@@ -144,8 +144,8 @@ readonly class TripSeatService
             // Both conditions failed - throw exception
             throw new InvalidSeatForReservation(
                 __('api.seat_gender_conflict', [
-                    'seatName' => $busSeat->name,
-                    'adjacentSeatName' => $adjacentBusSeat->name,
+                    'seatId' => $seat->id,
+                    'adjacentSeatId' => $adjacentTripSeat->id,
                 ])
             );
         }

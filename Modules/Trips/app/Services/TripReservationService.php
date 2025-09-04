@@ -38,29 +38,31 @@ readonly class TripReservationService
             $reservedSeats = $this->tripSeatService->reserveSeats($trip, $passengers);
 
             // Create order with items and payment
-            $order = $this->orderService->createOrderWithItems($user, $trip, $reservedSeats, $passengers);
-
-            // An event could be dispatched here
-            // (For sending SMS to passengers or...)
-
-            return $order;
+            return $this->orderService->createOrderWithItems($user, $trip, $reservedSeats, $passengers);
         });
     }
 
     /**
      * @throws Throwable
      */
-    public function cancelReservation(Order $order, array $seats_to_cancel): void
+    public function cancelReservation(Order $order, ?array $seats_to_cancel = null): void
     {
         DB::transaction(function () use ($order, $seats_to_cancel) {
-            // Check if all the seats are belong to this order
-            $itemsCount = $this->orderItemService->getOrderItemsCountBySeatIds($order->id, $seats_to_cancel);
-            if (count($seats_to_cancel) !== $itemsCount) {
-                throw new InvalidOrderException(__('api.seats_not_belong_to_order'));
+            // If any seats provided, check if all the seats are belong to this order (Validation)
+            // Else, choose all seats (items) of the order to get deleted
+            if ($seats_to_cancel) {
+                $itemsCount = $this->orderItemService->getOrderItemsCountBySeatIds($order->id, $seats_to_cancel);
+                if (count($seats_to_cancel) !== $itemsCount) {
+                    throw new InvalidOrderException(__('api.seats_not_belong_to_order'));
+                }
+            } else {
+                $seats_to_cancel = $this->orderItemService->getItemsForOrder($order->id, ['trip_seat_id'])
+                    ->pluck('trip_seat_id')
+                    ->toArray();
             }
 
             // Mark order items as deleted
-            $this->orderItemService->deleteItems($seats_to_cancel);
+            $this->orderItemService->deleteByTripSeatId($seats_to_cancel);
 
             // Release seats
             $this->tripSeatService->releaseSeats($seats_to_cancel);
@@ -74,7 +76,6 @@ readonly class TripReservationService
             }
 
             // Also we can add the canceled seats count to the trip's available seats
-            // We can throw an event for that or...
         });
     }
 }

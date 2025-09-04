@@ -37,4 +37,9 @@ class BusSeat extends Model
     {
         return BusSeatFactory::new();
     }
+
+    public function getSeatNumberAttribute(): string
+    {
+        return "$this->column$this->row";
+    }
 }

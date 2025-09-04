@@ -22,8 +22,8 @@ class DeleteTripReservationRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'seat_ids' => ['required', 'array'],
-            'seat_ids.*' => ['required', 'integer'],
+            'seat_ids' => ['sometimes', 'array'],
+            'seat_ids.*' => ['required', 'integer', 'distinct'],
         ];
     }
 }

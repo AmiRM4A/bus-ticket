@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Modules\Orders\Database\Factories\OrderFactory;
 use Modules\Orders\Enums\OrderStatusEnum;
 use Modules\Payments\Models\Payment;
+use Modules\Trips\Models\Trip;
 use Modules\Users\Models\User;
 
 class Order extends Model
@@ -40,6 +41,16 @@ class Order extends Model
     public function orderItems(): HasMany
     {
         return $this->hasMany(OrderItem::class);
+    }
+
+    public function getTripIdAttribute()
+    {
+        return $this->data['trip_id'] ?? null;
+    }
+
+    public function trip(): BelongsTo
+    {
+        return $this->belongsTo(Trip::class, 'trip_id');
     }
 
     public function canPay(): bool
@@ -110,5 +121,10 @@ class Order extends Model
     protected static function newFactory(): OrderFactory
     {
         return OrderFactory::new();
+    }
+
+    public function getTotalAmountAttribute()
+    {
+        return $this->orderItems()->sum('price');
     }
 }

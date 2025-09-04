@@ -42,11 +42,11 @@ class OrderItemService
             ->count();
     }
 
-    public function deleteItems(int|array $id): ?bool
+    public function deleteByTripSeatId(int|array $id): ?bool
     {
         $id = is_int($id) ? [$id] : $id;
 
-        return OrderItem::whereIn('id', $id)->delete();
+        return OrderItem::whereIn('trip_seat_id', $id)->delete();
     }
 
     public function findOrderIdsBySeatIds(array $seatIds): array
@@ -83,5 +83,10 @@ class OrderItemService
     public function getSeatIdsFromItems(Collection $items): array
     {
         return $items->pluck('trip_seat_id')->toArray();
+    }
+
+    public function getItemsForOrder(int $order_id, array $columns = ['*']): Collection
+    {
+        return OrderItem::forOrder($order_id)->get($columns);
     }
 }

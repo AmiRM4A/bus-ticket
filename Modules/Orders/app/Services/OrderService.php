@@ -5,7 +5,6 @@ namespace Modules\Orders\Services;
 use Illuminate\Support\Collection;
 use Modules\Orders\Enums\OrderStatusEnum;
 use Modules\Orders\Exceptions\InvalidOrderException;
-use Modules\Orders\Exceptions\OrderCannotBeCancelledException;
 use Modules\Orders\Models\Order;
 use Modules\Trips\Models\Trip;
 use Modules\Trips\Models\TripReservation;
@@ -66,34 +65,19 @@ readonly class OrderService
         // We can also add the reserved seats count to the trip's reserved seats
     }
 
-    /**
-     * @throws OrderCannotBeCancelledException
-     */
-    public function cancelOrder(Order|int $order): bool
+    public function cancelOrder(array|int $orderId): bool
     {
-        $order = is_int($order) ? Order::findOrFail($order) : $order;
-
-        if (! $this->canCancelOrder($order)) {
-            throw new OrderCannotBeCancelledException;
-        }
-
-        return $order->markAsCancelled();
-    }
-
-    public function cancelOrders(array $orderIds): bool
-    {
-        return Order::whereIn('id', $orderIds)
+        return Order::whereIn('id', (array) $orderId)
             ->update(['status' => OrderStatusEnum::Cancelled]);
     }
 
-    public function getPendingOrderForUser(int $orderId, int $userId): Order
+    public function getOrderForUser(int $orderId, int $userId): Order
     {
         return Order::forUser($userId)
-            ->pending()
             ->findOrFail($orderId);
     }
 
-    private function canCancelOrder(Order $order): bool
+    public function canCancelOrder(Order $order): bool
     {
         return in_array($order->status, [
             OrderStatusEnum::Pending,

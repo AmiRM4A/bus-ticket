@@ -18,10 +18,8 @@ readonly class PaymentService
         //
     }
 
-    public function createPaymentLink(Order $order): string
+    public function createPaymentLink(Payment $payment): string
     {
-        $payment = $this->createPaymentForOrder($order);
-
         // Create payment link here (by using the $payment's price and transaction_id)
         // the below one is just a TEST LINK after gateway (callback)
 
@@ -59,7 +57,7 @@ readonly class PaymentService
             ->update(['status' => PaymentStatusEnum::CANCELLED]);
     }
 
-    private function createPaymentForOrder(Order $order): Payment
+    public function createPaymentForOrder(Order $order): Payment
     {
         return Payment::create([
             'order_id' => $order->id,
