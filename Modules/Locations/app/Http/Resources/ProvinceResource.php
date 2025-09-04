@@ -1,15 +1,15 @@
 <?php
 
-namespace Modules\Users\Http\Resources;
+namespace Modules\Locations\Http\Resources;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
-use Modules\Users\Models\User;
+use Modules\Locations\Models\Province;
 
 /**
- * @mixin User
+ * @mixin Province
  */
-class UserResource extends JsonResource
+class ProvinceResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -20,9 +20,7 @@ class UserResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'name' => $this->name,
-            'email' => $this->email,
-            'created_at' => $this->created_at->toIso8601String(),
+            'name' => __("api.$this->name"),
         ];
     }
 }

@@ -26,10 +26,20 @@ class TripSeatResource extends JsonResource
             'name' => $this->busSeat?->name,
             'row' => $this->busSeat->row,
             'column' => $this->busSeat->column,
-            'reserved_gender' => GenderEnum::resolveByNum($this->reserved_gender),
+            'number' => $this->busSeat->seat_number,
+            'reserved_gender' => $this->resolveGender(),
             'is_available' => $this->status === TripSeatStatusEnum::AVAILABLE,
             'is_reserved' => $this->status === TripSeatStatusEnum::RESERVED,
             'is_sold' => $this->status === TripSeatStatusEnum::SOLD,
         ];
+    }
+
+    private function resolveGender(): ?string
+    {
+        if (is_null($this->reserved_gender) || ! ($gender = GenderEnum::resolveByNum($this->reserved_gender))) {
+            return null;
+        }
+
+        return __("api.$gender->value");
     }
 }

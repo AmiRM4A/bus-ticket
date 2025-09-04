@@ -64,4 +64,9 @@ class Trip extends Model
     {
         return TripFactory::new();
     }
+
+    public function hasRemainingSeats(): bool
+    {
+        return $this->reservations_count < $this->total_seats;
+    }
 }

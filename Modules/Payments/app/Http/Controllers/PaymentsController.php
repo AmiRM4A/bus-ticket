@@ -5,6 +5,7 @@ namespace Modules\Payments\Http\Controllers;
 use App\Http\Controllers\ApiController;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Modules\Payments\Http\Resources\PaymentVerifiedResource;
 use Modules\Payments\Models\Payment;
 use Modules\Payments\Services\PaymentService;
 use Symfony\Component\HttpFoundation\Response as HttpResponse;
@@ -35,7 +36,10 @@ class PaymentsController extends ApiController
 
         $this->paymentService->verify($payment);
 
-        return $this->success();
+        return $this->success(
+            new PaymentVerifiedResource($payment),
+            __('api.payment_verified_successfully')
+        );
     }
 
     private function isValidVerifyRequest(Request $request, Payment $payment): bool

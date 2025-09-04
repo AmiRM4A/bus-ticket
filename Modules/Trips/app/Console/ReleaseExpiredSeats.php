@@ -68,7 +68,7 @@ class ReleaseExpiredSeats extends Command
 
             if (! empty($orderIds)) {
                 // Cancel associated orders
-                $this->orderService->cancelOrders($orderIds);
+                $this->orderService->cancelOrder($orderIds);
 
                 // Cancel associated payments to fetched orders
                 $this->paymentService->cancelByOrderIds($orderIds);

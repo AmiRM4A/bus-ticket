@@ -21,10 +21,11 @@ class OrdersController extends ApiController
     {
         $order = Order::forUser(auth()->id())
             ->with([
-                'orderItems:trip_seat_id,passenger_id,order_id',
+                'orderItems:trip_seat_id,passenger_id,order_id,price',
                 'orderItems.passenger:id,first_name,last_name,national_code',
-                'orderItems.tripSeat:id,trip_id',
-                'orderItems.tripSeat.trip:id',
+                'orderItems.tripSeat:id,trip_id,bus_seat_id',
+                'orderItems.tripSeat.trip:id,bus_id',
+                'trip:id,from_province_id,to_province_id,trip_date,departure_time',
             ])
             ->findOrFail($order_id);
 
@@ -43,10 +44,13 @@ class OrdersController extends ApiController
             );
         }
 
-        $paymentLink = $this->paymentService->createPaymentLink($order);
+        $payment = $this->paymentService->createPaymentForOrder($order);
+        $paymentLink = $this->paymentService->createPaymentLink($payment);
 
         return $this->success([
-            'payment_link' => $paymentLink,
+            'payment_url' => $paymentLink,
+            'transaction_id' => $payment->transaction_id,
+            'amount' => $payment->amount,
         ]);
     }
 }

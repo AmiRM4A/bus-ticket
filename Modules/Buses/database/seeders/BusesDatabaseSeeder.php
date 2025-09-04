@@ -34,7 +34,7 @@ class BusesDatabaseSeeder extends Seeder
                 $seatNumber = 1;
 
                 // Generate seats for exactly 4 rows
-                for ($row = 1; $row <= 4; $row++) {
+                for ($row = 1; $row <= 10; $row++) {
                     for ($columnIndex = 0; $columnIndex < 4; $columnIndex++) {
                         $busSeatsToInsert[] = [
                             'bus_id' => $bus->id,

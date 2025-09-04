@@ -19,13 +19,17 @@ class OrderItemResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'seat_id' => $this->tripSeat->id,
-            'trip_id' => $this->tripSeat->trip_id,
-            'passenger' => [
-                'first_name' => $this->passenger->first_name,
-                'last_name' => $this->passenger->last_name,
-                'national_code' => $this->passenger->national_code,
-            ],
+            'trip_seat_id' => $this->tripSeat->id,
+            'seat_name' => $this->tripSeat->busSeat->name,
+            'seat_number' => $this->tripSeat->busSeat->seat_number,
+            'passenger' => $this->whenLoaded('passenger', function () {
+                return [
+                    'first_name' => $this->passenger->first_name,
+                    'last_name' => $this->passenger->last_name,
+                    'national_code' => $this->passenger->national_code,
+                ];
+            }),
+            'price' => $this->price,
         ];
     }
 }

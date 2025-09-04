@@ -4,6 +4,8 @@ namespace Modules\Trips\Http\Resources;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Modules\Buses\Http\Resources\BusResource;
+use Modules\Locations\Http\Resources\ProvinceResource;
 use Modules\Trips\Models\Trip;
 
 /**
@@ -20,16 +22,16 @@ class TripIndexResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'bus' => $this->bus,
-            'origin' => $this->origin,
-            'destination' => $this->destination,
+            'bus' => BusResource::make($this->whenLoaded('bus')),
+            'origin' => ProvinceResource::make($this->whenLoaded('origin')),
+            'destination' => ProvinceResource::make($this->whenLoaded('destination')),
             'total_seats' => $this->total_seats,
             'reserved_seats_count' => $this->reserved_seats_count,
             'trip_date' => $this->trip_date->format('Y-m-d'),
             'departure_time' => $this->departure_time,
-            'arrived_at' => $this->arrived_at?->format('Y-m-d H:i:s'),
-            'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at,
+            'arrived_at' => $this->arrived_at?->toIso8601String(),
+            'created_at' => $this->created_at->toIso8601String(),
+            'updated_at' => $this->updated_at->toIso8601String(),
         ];
     }
 }

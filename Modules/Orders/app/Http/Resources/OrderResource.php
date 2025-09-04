@@ -20,10 +20,11 @@ class OrderResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'items' => OrderItemResource::collection($this->orderItems),
             'status' => $this->status,
-            'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at,
+            'total_amount' => $this->total_amount,
+            'created_at' => $this->created_at->toIso8601String(),
+            'items' => OrderItemResource::collection($this->whenLoaded('orderItems')),
+            'trip' => OrderTripResource::make($this->whenLoaded('trip')),
         ];
     }
 }

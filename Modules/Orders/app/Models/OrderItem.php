@@ -2,6 +2,7 @@
 
 namespace Modules\Orders\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -42,5 +43,10 @@ class OrderItem extends Model
     protected static function newFactory(): OrderItemFactory
     {
         return OrderItemFactory::new();
+    }
+
+    public function scopeForOrder(Builder $builder, int $order_id): Builder
+    {
+        return $builder->where('order_id', $order_id);
     }
 }
